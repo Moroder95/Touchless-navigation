@@ -4,16 +4,22 @@ import { ExampleComponent, Grid} from 'cant-touch-this'
 
 import 'cant-touch-this/dist/index.css'
 const test = [1,2,3,4,5,6,7,8,9];
+
 const App = () => {
   return( 
   <>
     <ExampleComponent text="Create React Library Example 😄" />
     <Grid columns={3}>
-      {test.map(el =>{
-        return <div>dws</div>
+      {test.map((el) =>{
+        return <div key={el}>{el}</div>
+      })}
+      
+    </Grid>
+    <Grid columns={2}>
+    {test.map((el) =>{
+        return <Grid columns={2} key={el}><div>d</div><div>d</div></Grid>
       })}
     </Grid>
-    
 
     {/* EXAMPLE STRUCTURE
     <Grid columns={1}>
