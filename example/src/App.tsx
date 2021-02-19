@@ -9,16 +9,19 @@ const App = () => {
   return( 
   <>
     <ExampleComponent text="Create React Library Example 😄" />
-    <Grid columns={3}>
+    <Grid columns={1}>
+
+      <Grid columns={3}>
+        {test.map((el) =>{
+          return <div key={el}>{el}</div>
+        })}
+        
+      </Grid>
+      <Grid columns={2}>
       {test.map((el) =>{
-        return <div key={el}>{el}</div>
-      })}
-      
-    </Grid>
-    <Grid columns={2}>
-    {test.map((el) =>{
         return <Grid columns={2} key={el}><div>d</div><div>d</div></Grid>
       })}
+      </Grid>
     </Grid>
 
     {/* EXAMPLE STRUCTURE
