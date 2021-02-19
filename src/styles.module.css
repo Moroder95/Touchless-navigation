@@ -14,6 +14,26 @@
   column-gap: 20px;
   row-gap: 20px;
 }
-.grid-item{
+.grid-child-wrapper{
+  justify-items: center;
+  text-align: center;
+  margin: 4px;
+}
 
+.grid-child-wrapper.active{
+  margin: 0px;
+  border: 4px solid black;
+}
+
+@keyframes colorEl {
+  0% { background-color: red; border: 0px solid blue; }
+  10% { background-color: yellow; }
+  20% { background-color: darkolivegreen; transform: skew(-200, 120); }
+  30% { background-color: blue; }
+  40% { background-color: lavender; }
+  50% { background-color: purple; transform: scale(1.20); transform: rotate(180deg); }
+  60% { background-color: royalblue; border: 90px solid orange; }
+  70% { background-color: darkmagenta; }
+  80% { background-color: cyan; }
+  90% { background-color: orange; transform: skew(20deg, -45deg); }
 }
