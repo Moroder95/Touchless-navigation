@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ExampleComponent, Grid} from 'cant-touch-this'
+import { ExampleComponent, Touchless, TouchlessApp} from 'cant-touch-this'
 
 import 'cant-touch-this/dist/index.css'
 const test = [1,2,3,4,5,6,7,8,9];
@@ -8,11 +8,23 @@ const App = () => {
   return( 
   <>
     <ExampleComponent text="Create React Library Example 😄" />
-    <Grid columns={3}>
+    <TouchlessApp>
       {test.map(el =>{
-        return <div>dws</div>
+        return (
+          <Touchless key={el}>
+            <div style={{background: 'dodgerblue'}}>{el}</div>
+          </Touchless>)
       })}
-    </Grid>
+      <div style={{width: "100vw", display: 'flex', margin: '0 20%', flexWrap: 'wrap'}}>
+      {test.map(el =>{
+        return (
+          <Touchless key={el}>
+            <div>{el}</div>
+          </Touchless>)
+      })}
+      </div>
+
+    </TouchlessApp>
     
 
     {/* EXAMPLE STRUCTURE

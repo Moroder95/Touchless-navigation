@@ -17,3 +17,12 @@
 .grid-item{
 
 }
+.touchless{
+  flex-basis: 33%;
+}
+.touchless.active{
+
+}
+.touchless-app{
+  
+}
