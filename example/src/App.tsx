@@ -1,13 +1,16 @@
 import React from 'react'
 
-import { ExampleComponent, Touchless, TouchlessApp} from 'cant-touch-this'
+import { ExampleComponent, TouchlessApp, Touchless, Grid} from 'cant-touch-this'
 
 import 'cant-touch-this/dist/index.css'
-const test = [1,2,3,4,5,6,7,8,9];
+const test = [1,2,3,4,5,6,7,8];
+const test4 = [1,2,3,4,5,6,7,8,9];
+const test2 = [1, 2];
+const test3 = [1, 2];
 const App = () => {
   return( 
   <>
-    <ExampleComponent text="Create React Library Example 😄" />
+    {/* <ExampleComponent text="Create React Library Example 😄" />
     <TouchlessApp>
       {test.map(el =>{
         return (
@@ -15,15 +18,54 @@ const App = () => {
             <div style={{background: 'dodgerblue'}}>{el}</div>
           </Touchless>)
       })}
-      <div style={{width: "100vw", display: 'flex', margin: '0 20%', flexWrap: 'wrap'}}>
+      <div style={{width: "100vw", display: 'flex', flexWrap: 'wrap'}}>
       {test.map(el =>{
         return (
           <Touchless key={el}>
-            <div>{el}</div>
+            <div style={{background: 'lightsteelblue'}}>{el}</div>
           </Touchless>)
       })}
       </div>
 
+    </TouchlessApp> */}
+    <TouchlessApp>
+    <ExampleComponent text="Create React Library Example 😄" />
+      <Grid columns={3}>
+        {test.map((el, index) =>{
+          return <Touchless style={{backgroundColor: "orange", color: "white"}} key={index}>{el}</Touchless>
+        })}
+      </Grid>
+      <ExampleComponent text="Create React Library Example 😄" />
+      <Grid columns={7}>
+        {test4.map((el, index) =>{
+          return <Touchless style={{backgroundColor: "lightBlue", color: "white"}} key={index}>{el}</Touchless>
+        })}
+      </Grid>
+      <Grid columns={4}>
+        {test.map((el, index) =>{
+          return <Touchless style={{backgroundColor: "blue", color: "white"}} key={index}>{el}</Touchless>
+        })}
+      </Grid>  
+      <Grid columns={2}>
+        {test3.map((el, index) =>{
+          return <Touchless style={{backgroundColor: "red", color: "white"}} key={index}>{el}</Touchless>
+        })}
+      </Grid>
+      <p> DAMN SHIT, WHERE'S MY HOTDOG????!?!!?!? 420 blaze it</p>
+      <Grid>
+        {test2.map((el, index) =>{
+          return <Touchless style={{backgroundColor: "yellow", color: "black"}} key={index}>{el}</Touchless>
+        })}
+      </Grid>
+      <p>no more grids below, only</p>
+      <p>hotdog</p>
+      <p>hotdog.</p>
+      <p>hotdog..</p>
+      <p>hotdog...</p>
+      <p>hotdog....</p>
+      <p>hotdog.....</p>
+      <p>hotdog......</p>
+      <p>hotdog.......</p>
     </TouchlessApp>
     
 
