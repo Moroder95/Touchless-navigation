@@ -11,24 +11,6 @@ const test3 = [1, 2];
 const App = () => {
   return( 
   <>
-    {/* <ExampleComponent text="Create React Library Example 😄" />
-    <TouchlessApp>
-      {test.map(el =>{
-        return (
-          <Touchless key={el}>
-            <div style={{background: 'dodgerblue'}}>{el}</div>
-          </Touchless>)
-      })}
-      <div style={{width: "100vw", display: 'flex', flexWrap: 'wrap'}}>
-      {test.map(el =>{
-        return (
-          <Touchless key={el}>
-            <div style={{background: 'lightsteelblue'}}>{el}</div>
-          </Touchless>)
-      })}
-      </div>
-
-    </TouchlessApp> */}
     <TouchlessApp startElement={4} secondaryThreshold={10}>
     <ExampleComponent text="Create React Library Example 😄" />
       <Grid columns={3}>
@@ -72,30 +54,6 @@ const App = () => {
       <p>hotdog......</p>
       <p>hotdog.......</p>
     </TouchlessApp>
-    
-
-    {/* EXAMPLE STRUCTURE
-    <Grid columns={1}>
-      <Form>
-        <Grid columns={3}>
-          <RadioButton/>
-          <RadioButton/>
-          <RadioButton/>
-        </Grid>
-      </Form>
-      <Form>
-        <Grid columns={3}>
-          <Checkbox/>
-          <Checkbox/>
-          <Checkbox/>
-        </Grid>
-      </Form>
-      <Grid columns={2}>
-        <Button>Back</Button>
-        <Button>Next</Button>
-      </Grid>
-    </Grid> */}
-    
   </>)
 }
 
