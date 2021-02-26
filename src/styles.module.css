@@ -19,16 +19,16 @@
 
 }
 .touchless{
-  flex-basis: 33%;
-  width: 10rem;
-  text-align: center;
-  margin: 1rem;
-  border: 0px black solid;
-  padding: 5px;
+
 }
-.touchless.active{
+
+/* .touchless:focus{
   padding: 0px;
   border-width: 5px;
+} */
+
+.touchless.active{
+
 }
 .touchless-app{
   

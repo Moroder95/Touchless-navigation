@@ -5,11 +5,12 @@ export interface TouchlessProps {
     children: React.ReactNode
     style?: React.CSSProperties
     onClick?: (event: React.MouseEvent<HTMLDivElement | MouseEvent>) => void
+    className?: string
 }
  
-const Touchless: React.SFC<TouchlessProps> = ({children, style, onClick}) => {
+const Touchless: React.SFC<TouchlessProps> = ({children, style, onClick, className =""}) => {
     return ( 
-        <div className={`${styles.touchless}`} style={style} onClick={onClick}>
+        <div className={`${styles.touchless} ${className}`} style={style} onClick={()=>{}} tabIndex={0}>
             {children}
         </div>
      );
