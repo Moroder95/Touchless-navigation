@@ -1,5 +1,8 @@
 import * as React from 'react';
 import styles from './styles.module.css'
+import { io } from "socket.io-client";
+import {host} from './host';
+import UidContextProvider, { UidContext } from './Context/UidContext';
 
 export interface TouchlessAppProps {
     children: React.ReactNode
@@ -11,7 +14,8 @@ interface coordinateObj {
     y: number,
     pos?: DOMRect | null
 }
-const TouchlessApp: React.SFC<TouchlessAppProps> = ({children, startElement = 0, secondaryThreshold = 10}) => {
+
+const TouchlessApp: React.SFC<TouchlessAppProps> = ({children, startElement = 0, secondaryThreshold = 10 }) => {
     React.useEffect(()=>{
         const elements = document.querySelectorAll('.' + styles.touchless); // Get all elements that can be controlled
         const controlled = document.querySelectorAll('.' + styles.touchless + '.'+styles.active); // Get currently controlled Element
@@ -117,9 +121,34 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({children, startElement = 0,
             document.removeEventListener('keydown', keyEvent);// remove eventlistener is unmount
         }
     }, [ secondaryThreshold, startElement ]);
+    const { uid } = React.useContext(UidContext);
+
+    React.useEffect(()=>{
+        let socket: any= null
+        
+        if(uid){ // if uid is made, establish socket.io connection
+           socket = io(host, {
+            auth: {
+                token: uid
+              }
+        });
+        
+        socket.emit('initialize room'); 
+        socket.on('key event', ({ key }: {key: string})=>{ // dispatch key events for navigation
+            document.dispatchEvent(new KeyboardEvent('keydown', { 'key': key }));
+        })
+    }   
+        return ()=>{
+            if(socket){ //Disconnect socket
+                socket.emit('host disconnected');
+                socket.disconnect();
+            }
+            
+        }
+    },[ uid ]);
     
     return ( 
-        <div className={styles['touchless-app']}>
+        <div className={`${styles['touchless-app']} touchless-app`}>
             {children}
         </div>
      );

@@ -1,29 +1,20 @@
 import * as React from 'react';
 import styles from 'styles.module.css'
+import UidContextProvider from './Context/UidContext';
+import  TouchlessApp  from './TouchlessApp'
 
-export interface TouchlessAppProps {
+export interface TouchlessAppWrapperProps {
     children: React.ReactNode
+    startElement?: number;
+    secondaryThreshold?: number;
 }
- 
-const TouchlessApp: React.SFC<TouchlessAppProps> = ({children}) => {
-    React.useEffect(()=>{
-        const elements = document.querySelectorAll('.' + styles.touchless);
-        const keyEvent = (e: KeyboardEvent)=>{
-            
-            
-        }
-        document.addEventListener( 'keydown', keyEvent );
 
-        return ()=>{
-            document.removeEventListener('keydown', keyEvent);
-        }
-    }, []);
-    
-    return ( 
-        <div className={styles['touchless-wrapper']}>
-            {children}
-        </div>
-     );
-}
+const TouchlessAppWrapper: React.SFC<TouchlessAppWrapperProps> = ({ children, startElement, secondaryThreshold}) =>( 
+    <UidContextProvider>
+        <TouchlessApp startElement={ startElement } secondaryThreshold={ secondaryThreshold }>
+            { children }
+        </TouchlessApp>
+    </UidContextProvider>
+);
  
-export default TouchlessApp;
+export default TouchlessAppWrapper;
