@@ -1,10 +1,10 @@
 {
   "name": "touchless-navigation",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A React library for creating apps that enables touchless navigation.",
   "author": "Moroder95",
   "license": "MIT",
-  "repository": "Moroder95/cant-touch-this",
+  "repository": "Moroder95/Touchless-navigation",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.tsx",

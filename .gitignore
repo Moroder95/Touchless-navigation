@@ -4,6 +4,9 @@
 # dependencies
 node_modules
 
+# Example folder
+example
+
 # builds
 build
 dist
@@ -17,8 +20,7 @@ dist
 .env.test.local
 .env.production.local
 
-# Example folder
-example
+
 
 npm-debug.log*
 yarn-debug.log*
