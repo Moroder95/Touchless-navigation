@@ -34,20 +34,14 @@ const customKeyGesture = (key: string)=>{
 const getCenterPos = (element: HTMLDivElement | null) : coordinateObj  => { // Function that gives X and Y coordinates on an HTMLDivElement  and the getBoundingClientRect object
     const pos =  element?.getBoundingClientRect() || null;
     const {width: appWidth, height: appHeight} = document.querySelector('.touchless-app.'+styles['touchless-app'])?.getBoundingClientRect() || {width: 0, height: 0};
-
     
     const y: number = pos?.y || 0;
     const x: number = pos?.x || 0;
-    // console.log(Math.round((x/appWidth)*100), Math.round((y/appHeight)*100));
-    // // console.log(appWidth, appHeight)s
-    // console.log()
-    // const part = 3;
-    // const whole = 10;
-    // console.log
+
     return {x: (x/appWidth)*100 , y: (y/appHeight)*100, pos};
 }
 
-const TouchlessApp: React.SFC<TouchlessAppProps> = ({children, secondaryThreshold = 50 }) => {
+const TouchlessApp: React.SFC<TouchlessAppProps> = ({children, secondaryThreshold = 1 }) => {
     const { uid, setConnection, next, customKeys} = React.useContext(UidContext);
 
     React.useEffect(()=>{ // runs if next state is update in context, to reset the controlled element
@@ -141,12 +135,12 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({children, secondaryThreshol
                 });
                 loops++; // loop counts up
                 if(closest === null && loops<maxLoops){ // closest is still not found and loops hasn't exceeded max, try find a closest element with a larger threshold multiplier
-                    findClosestElement(loops);
+                    findClosestElement(loops*0.5);
                 }
                 
             }
             //Execute function with starting multipler as 1
-            findClosestElement(1);
+            findClosestElement(0.5);
 
             if(closest && controlledElement ){    //remove and add classname on controlled and new controlled element        
                 addActive((closest as HTMLDivElement));

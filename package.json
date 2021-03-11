@@ -75,8 +75,6 @@
     "Typescript",
     "Websockets",
     "Socket.io"
-  ],
-  "publishConfig": {
-    "registry":"https://www.npmjs.com/package/touchless-navigation" 
-  }
+  ]
+
 }

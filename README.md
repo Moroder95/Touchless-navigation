@@ -40,7 +40,7 @@ The \<TouchlessApp> tag is what is the the controller, this is the parent compon
 
 |      Prop Name    | Required |     Type      | Default value| Description |
 | ------------ | -------- |-------------- | ------------ | ----------- |
-| secondaryThreshold |    No    | number       | 50       | This value is an indicator of how far off an Element can be on the second Axis. E.g. You want to go right, there by trying to move on the x-axis, then the secondary axis is the y-axis. The prop then indicates how far on the y-axis the elements can be from each other and still be navigated between. |
+| secondaryThreshold |    No    | number       | 1       | This value is an indicator of how far off an Element can be on the second Axis. E.g. You want to go right, there by trying to move on the x-axis, then the secondary axis is the y-axis. The prop then indicates how far on the y-axis the elements can be from each other and still be navigated between. |
 | Children     |    Yes   | ReactNode     | null         | Everything the \<TouchlessApp> tag surrounds. This is where you insert your \<Touchless> components.|
 
 
