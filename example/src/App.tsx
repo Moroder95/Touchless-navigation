@@ -1,31 +1,42 @@
 import React from 'react'
 
-import { ExampleComponent, TouchlessApp, Touchless, Grid, MobileQR } from 'cant-touch-this'
-
-import 'cant-touch-this/dist/index.css'
+import {  Touchless, MobileQR, useConnectionChange, useGoToStartElement, useCustomKeys, useNewSession } from 'cant-touch-this'
 import MyCheckbox from './MyCheckbox';
+import TestBox from './TestBox';
+
 
 const test = [1,2,3,4,5,6,7,8];
 const test4 = [1,2,3,4,5,6,7,8,9];
 const test2 = [1, 2];
 const test3 = [1, 2];
 const App = () => {
+
+  const connectionStatus = useConnectionChange();
+  const goToStartElement = useGoToStartElement();
+  // const customKeyRef = useCustomKeys;
+  const activateCustomKeys = useCustomKeys({
+    swipeUp: 'w',
+    swipeDown: 's',
+    swipeLeft: 'a',
+    swipeRight: 'd',
+    click: 'space'
+  });
+  // const clearKeyRef = clearCustomKeys();
+  const newSession = useNewSession();
   return( 
   <>
   
-    <TouchlessApp startElement={4} secondaryThreshold={10} >
-      <MobileQR />
-    <ExampleComponent text="Create React Library Example 😄" />
-      <Grid columns={3}>
+   
+      
+      { !connectionStatus && <div style={{margin: "20px"}}><MobileQR logLink={true} /></div> }
+      <button onClick={goToStartElement}> Go home </button>
+      <button onClick={activateCustomKeys.clear}>CLEAR </button>
+      <button onClick={activateCustomKeys.initiate}>Initiate </button>
+      <button onClick={newSession}>Start New Session</button>
         {test.map((el, index) =>{
-          return <Touchless className="stuff" style={{backgroundColor: "orange", color: "white"}} key={index} onClick={(e: any)=>{
-            e.currentTarget.classList.toggle("penis");
-            console.log(e.currentTarget)
-          }}>{el}</Touchless>
+          return <TestBox el={el} key={index}></TestBox>
         })}
-      </Grid>
-      <ExampleComponent text="Create React Library Example 😄" />
-      <Grid columns={7}>
+
         {test4.map((el, index) =>{
           return(
             <MyCheckbox id={'test' + index} value={'vehicle'+el} key={index}>
@@ -33,33 +44,19 @@ const App = () => {
             </MyCheckbox>
           )
         })}
-      </Grid>
-      <Grid columns={4}>
+
         {test.map((el, index) =>{
           return <Touchless className="stuff" style={{backgroundColor: "blue", color: "white"}} key={index}>{el}</Touchless>
         })}
-      </Grid>  
-      <Grid columns={2}>
+    
         {test3.map((el, index) =>{
           return <Touchless className="stuff" style={{backgroundColor: "red", color: "white"}} key={index}>{el}</Touchless>
         })}
-      </Grid>
-      <p> DAMN SHIT, WHERE'S MY HOTDOG????!?!!?!? 420 blaze it</p>
-      <Grid>
+   
         {test2.map((el, index) =>{
           return <Touchless className="stuff" style={{backgroundColor: "yellow", color: "black"}} key={index}>{el}</Touchless>
         })}
-      </Grid>
-      <p>no more grids below, only</p>
-      <p>hotdog</p>
-      <p>hotdog.</p>
-      <p>hotdog..</p>
-      <p>hotdog...</p>
-      <p>hotdog....</p>
-      <p>hotdog.....</p>
-      <p>hotdog......</p>
-      <p>hotdog.......</p>
-    </TouchlessApp>
+     
   </>)
 }
 

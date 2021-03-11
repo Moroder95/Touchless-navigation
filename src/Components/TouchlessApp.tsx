@@ -1,12 +1,12 @@
 import * as React from 'react';
-import styles from './styles.module.css'
-import { io } from "socket.io-client";
-import {host} from './host';
-import UidContextProvider, { UidContext } from './Context/UidContext';
+import styles from '../styles.module.css'
+import { io, Socket } from "socket.io-client";
+import { host } from '../Settings/host';
+import { UidContext } from '../Context/UidContext';
+import { useEffect } from 'react';
 
 export interface TouchlessAppProps {
     children: React.ReactNode
-    startElement?: number;
     secondaryThreshold?: number;
 }
 interface coordinateObj {
@@ -14,28 +14,69 @@ interface coordinateObj {
     y: number,
     pos?: DOMRect | null
 }
+const ACTIVESTYLE = [styles.active, 'active'];
 
-const TouchlessApp: React.SFC<TouchlessAppProps> = ({children, startElement = 0, secondaryThreshold = 10 }) => {
-    React.useEffect(()=>{
+const removeActive = (element: any)=> { 
+    element.classList.remove(...ACTIVESTYLE)
+}
+const addActive = (element: any)=> { 
+    element.classList.add(...ACTIVESTYLE);
+}
+
+const customKeyGesture = (key: string)=>{
+    if(key === 'Enter'){
+        return 'click'
+    }else{
+        return 'swipe'.concat(key.substr(5))
+    }
+}
+
+const getCenterPos = (element: HTMLDivElement | null) : coordinateObj  => { // Function that gives X and Y coordinates on an HTMLDivElement  and the getBoundingClientRect object
+    const pos =  element?.getBoundingClientRect() || null;
+    const {width: appWidth, height: appHeight} = document.querySelector('.touchless-app.'+styles['touchless-app'])?.getBoundingClientRect() || {width: 0, height: 0};
+
+    
+    const y: number = pos?.y || 0;
+    const x: number = pos?.x || 0;
+    // console.log(Math.round((x/appWidth)*100), Math.round((y/appHeight)*100));
+    // // console.log(appWidth, appHeight)s
+    // console.log()
+    // const part = 3;
+    // const whole = 10;
+    // console.log
+    return {x: (x/appWidth)*100 , y: (y/appHeight)*100, pos};
+}
+
+const TouchlessApp: React.SFC<TouchlessAppProps> = ({children, secondaryThreshold = 50 }) => {
+    const { uid, setConnection, next, customKeys} = React.useContext(UidContext);
+
+    React.useEffect(()=>{ // runs if next state is update in context, to reset the controlled element
         const elements = document.querySelectorAll('.' + styles.touchless); // Get all elements that can be controlled
-        const controlled = document.querySelectorAll('.' + styles.touchless + '.'+styles.active); // Get currently controlled Element
+        const controlled = document.querySelectorAll('.' + styles.touchless + '.' + styles.active); // Get currently controlled Element
+        const startElement = document.querySelector('.' + styles.touchless + '.start-element'); // Get Element with starting class
+
         
-        if(controlled.length === 0 && elements.length > 0){ //If there is no controlled and there are elements to be controlled
-            const i = startElement <= elements.length ?  startElement-1 : 0 // i is index of what is chosen from props. If it's not specified in props it start with the first element of the list
-            elements[i].classList.add(styles.active, 'active'); //Add classname so that it's controlled
+        if(elements.length > 0){ //If there are elements to control
+            if(controlled.length){ // If there is any element that currently in control
+                controlled.forEach(el=>{ //Go through them all and remove the controlled class
+                    removeActive(el) 
+                });
+            }
+            if(startElement){ //If there is a element that is set to be the starting element
+                addActive(startElement);
+            }else{ //Add classname so that it's controlled
+                addActive(elements[0]);
+            }
         }
-        const getCenterPos = (element: HTMLDivElement | null) : coordinateObj  => { // Function that gives X and Y coordinates on an HTMLDivElement  and the getBoundingClientRect object
-            const pos =  element?.getBoundingClientRect() || null;
-            const y: number = pos?.y || 0;
-            const x: number = pos?.x || 0;
-            
-            return {x, y, pos};
-        }
+    }, [ next ]);
+
+    React.useEffect(()=>{
         
         const keyEvent = (e: KeyboardEvent)=>{
             // Get the currently selected Element from the DOM
             const controlledElement: HTMLDivElement | null = document.querySelector('.' + styles.touchless + '.'+styles.active);
-
+            const elements = document.querySelectorAll('.' + styles.touchless); // Get all elements that can be controlled
+    
             //If keypress is not = Arrow keys or Enter, return and dont execute any code
             if(!['ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft', 'Enter'].includes(e.key)){
                 return 
@@ -48,8 +89,7 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({children, startElement = 0,
             const xy = e.key === 'ArrowLeft' ||e.key === 'ArrowRight' ? 'x' : 'y'; // If left or Right Arrow  - Primary axis is set to X, else it is set to Y
             const xy2 = xy === 'x' ? 'y' : 'x'; //Secondary axis, the opposite of primary axis
             const direction = e.key === 'ArrowDown' ||e.key === 'ArrowRight' ? 1 : -1; // Direction variable is a multiplier to ensure positive values when an Elements position is in the right direction in relation to the starting point
-            const sThreshold =  secondaryThreshold
-            ; //Threshold is how far of an element is allowed to be positioned in the secondary direction in relation to the starting point
+            const sThreshold =  secondaryThreshold; //Threshold is how far of an element is allowed to be positioned in the secondary direction in relation to the starting point
             let loops = 1; // Variable to keep count of loops made and used for multiplying the threshold, to gradually find closest element in relation to the secodnary axis.
             const maxLoops= 15; // Variable to stop if loops variable exceeds this number
 
@@ -109,43 +149,54 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({children, startElement = 0,
             findClosestElement(1);
 
             if(closest && controlledElement ){    //remove and add classname on controlled and new controlled element        
-                controlledElement.classList.remove(styles.active, 'active');
-                (closest as HTMLDivElement).classList.add(styles.active, 'active');
+                addActive((closest as HTMLDivElement));
+                removeActive(controlledElement) 
             }  
         }
 
         document.addEventListener( 'keydown', keyEvent ); // bind eventlistener
 
         return ()=>{
-            console.log('removing event')
             document.removeEventListener('keydown', keyEvent);// remove eventlistener is unmount
         }
-    }, [ secondaryThreshold, startElement ]);
-    const { uid } = React.useContext(UidContext);
+    }, [ secondaryThreshold ]);
 
-    React.useEffect(()=>{
-        let socket: any= null
+    useEffect(()=>{
+        let socket: Socket | null = null;
         
         if(uid){ // if uid is made, establish socket.io connection
-           socket = io(host, {
+           socket = io((host), {
             auth: {
                 token: uid
               }
-        });
-        
-        socket.emit('initialize room'); 
-        socket.on('key event', ({ key }: {key: string})=>{ // dispatch key events for navigation
-            document.dispatchEvent(new KeyboardEvent('keydown', { 'key': key }));
-        })
-    }   
-        return ()=>{
-            if(socket){ //Disconnect socket
-                socket.emit('host disconnected');
-                socket.disconnect();
-            }
+            });
             
+            socket.emit('initialize room'); 
+            socket.on('key event', ({ key }: {key: string})=>{ // dispatch key events for 
+                if(Object.keys(customKeys).length > 0){
+                    const customGestureValue = customKeyGesture(key);
+                    const customKey = customKeys.hasOwnProperty(customGestureValue) ? customKeys[customGestureValue] : key;
+                    document.dispatchEvent(new KeyboardEvent('keydown', { 'key': customKey, bubbles: true }));
+                }else{
+                    document.dispatchEvent(new KeyboardEvent('keydown', { 'key': key, bubbles: true}));
+                }
+                
+            });
+            socket.on('room size changed', ({users} : any)=>{
+                if(users === 2){
+                    setConnection(true)
+                } else{
+                    setConnection(false) 
+                }
+            });
+            socket.on('disconnecting', ()=>{
+                socket?.emit('host disconnected');
+            })
+        }   
+        return ()=>{
+           socket?.disconnect();
         }
-    },[ uid ]);
+    }, [ uid, customKeys ]);
     
     return ( 
         <div className={`${styles['touchless-app']} touchless-app`}>

@@ -1,31 +1,10 @@
 /* add css module styles here (optional) */
-
-.test {
-  margin: 2em;
-  padding: 0.5em;
-  border: 2px solid #000;
-  font-size: 2em;
-  text-align: center;
-}
-
-.grid {
-  width: 100%;
-  display: grid;
-  column-gap: 20px;
-  row-gap: 20px;
-}
-
 .grid-item{
 
 }
 .touchless{
 
 }
-
-/* .touchless:focus{
-  padding: 0px;
-  border-width: 5px;
-} */
 
 .touchless.active{
 

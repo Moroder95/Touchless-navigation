@@ -10,7 +10,7 @@ export interface MyCheckboxProps {
 const MyCheckbox: React.SFC<MyCheckboxProps> = ({ id, children, value}) => {
     return ( 
         <label htmlFor={id}>      
-            <Touchless className="stuff" style={{backgroundColor: "lightBlue", color: "white"}}>
+            <Touchless className="my-checkbox">
                 <input type="checkbox" id={id} name={id} value={value}/>
                 <label>{ children }</label>
             </Touchless>

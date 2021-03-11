@@ -1,1 +1,0 @@
-export const host = "https://touchless-socket-io-server.herokuapp.com";
