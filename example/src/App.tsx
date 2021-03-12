@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {  Touchless, MobileQR, useConnectionChange, useGoToStartElement, useCustomKeys, useNewSession } from 'cant-touch-this'
+import {  Touchless, MobileQR, useConnectionChange, useGoToStartElement, useCustomKeys, useNewSession } from 'touchless-navigation';
 import MyCheckbox from './MyCheckbox';
 import TestBox from './TestBox';
 
@@ -25,8 +25,7 @@ const App = () => {
   const newSession = useNewSession();
   return( 
   <>
-  
-   
+
       
       { !connectionStatus && <div style={{margin: "20px"}}><MobileQR logLink={true} /></div> }
       <button onClick={goToStartElement}> Go home </button>

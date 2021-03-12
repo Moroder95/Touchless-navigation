@@ -31,15 +31,17 @@ const UidContextProvider: React.SFC<UidContextProps> = ({children}) => {
     setUid(uuid());
   }
   return (
-    <UidContext.Provider value={{
-    uid, 
-    newUid, 
-    connection, 
-    setConnection, 
-    next, 
-    setNext, 
-    customKeys,
-    setCustomKeys}}>
+    <UidContext.Provider 
+    value={{
+      uid, 
+      newUid, 
+      connection, 
+      setConnection, 
+      next, 
+      setNext, 
+      customKeys,
+      setCustomKeys
+    }}>
       { children }
     </UidContext.Provider>
   );

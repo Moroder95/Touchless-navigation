@@ -154,7 +154,7 @@ const YourApp = () => {
 ### Custom Component - checkbox
 ```tsx
 import * as React from 'react';
-import { Touchless } from 'cant-touch-this';
+import { Touchless } from 'touchless-navigation';
 
 export interface MyCheckboxProps {
     id: string
