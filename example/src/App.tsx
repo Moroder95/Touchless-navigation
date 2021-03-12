@@ -13,7 +13,7 @@ const App = () => {
 
   const connectionStatus = useConnectionChange();
   const goToStartElement = useGoToStartElement();
-  // const customKeyRef = useCustomKeys;
+
   const activateCustomKeys = useCustomKeys({
     swipeUp: 'w',
     swipeDown: 's',
@@ -21,7 +21,7 @@ const App = () => {
     swipeRight: 'd',
     click: 'space'
   });
-  // const clearKeyRef = clearCustomKeys();
+
   const newSession = useNewSession();
   return( 
   <>
