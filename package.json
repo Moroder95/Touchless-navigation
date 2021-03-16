@@ -62,7 +62,10 @@
     "dist"
   ],
   "dependencies": {
+    "@types/leapmotionts": "^0.7.28",
     "@types/uuid": "^8.3.0",
+    "leapjs": "^1.1.0",
+    "leapjs-plugins": "^0.1.12",
     "react-qr-code": "^1.1.1",
     "socket.io": "^3.1.2",
     "socket.io-client": "^3.1.2",
