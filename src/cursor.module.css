@@ -1,4 +1,3 @@
-/* add css module styles here (optional) */
 .cursor {
     width: 100px;
     height: 100px;
@@ -12,18 +11,4 @@
     border-width: 5px;
     opacity: 0.8;
     border-style: solid;
-}
-
-.grid-item{
-    color: orange;
-}
-.touchless{
-
-}
-
-.touchless.active{
-
-}
-.touchless-app{
-  
 }

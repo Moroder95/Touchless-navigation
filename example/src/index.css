@@ -59,7 +59,7 @@ code {
   border:5px solid dodgerblue;
   
 }
-.cursor {
+/* .cursor {
   width: 100px;
   height: 100px;
   position: fixed;
@@ -68,10 +68,10 @@ code {
   z-index: 910;
   background: rgba(0, 0, 0, 0.315);
   border-radius: 100%;
-  background: -webkit-radial-gradient(100px 100px, circle, #5cabff, #000);
+  /* background: -webkit-radial-gradient(100px 100px, circle, #5cabff, #000);
   background: -moz-radial-gradient(100px 100px, circle, #5cabff, #000);
-  background: radial-gradient(100px 100px, circle, #5cabff, #000);
-}
+  background: radial-gradient(100px 100px, circle, #5cabff, #000); */
+/*} */
 
 
 
