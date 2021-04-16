@@ -1,27 +1,23 @@
 /* add css module styles here (optional) */
-.grid-item{
-
+.grid-item {
 }
-.touchless{
-
+.touchless {
 }
 
-.touchless.active{
-
+.touchless.active {
 }
-.touchless-app{
-  
+.touchless-app {
 }
 .cursor {
-    width: 100px;
-    height: 100px;
-    position: fixed;
-    margin-left: -50px;
-    margin-top: -50px;
-    z-index: 910;
-    background: black;
-    border-radius: 100%;
-    background: -webkit-radial-gradient(100px 100px, circle, #5cabff, #000);
-    background: -moz-radial-gradient(100px 100px, circle, #5cabff, #000);
-    background: radial-gradient(100px 100px, circle, #5cabff, #000);
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  margin-left: -50px;
+  margin-top: -50px;
+  z-index: 910;
+  background: rgba(black, 0.3);
+  border-radius: 100%;
+  background: -webkit-radial-gradient(100px 100px, circle, #5cabff, #000);
+  background: -moz-radial-gradient(100px 100px, circle, #5cabff, #000);
+  background: radial-gradient(100px 100px, circle, #5cabff, #000);
 }
