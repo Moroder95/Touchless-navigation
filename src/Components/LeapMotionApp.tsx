@@ -1,38 +1,45 @@
-import React, { useEffect, useState } from 'react'
-// import * as Leap from 'leapmotionts';
-// import { LeapEvent } from 'leapmotionts';
+import React, { useEffect, useState } from 'react';
 import styles from '../styles.module.css';
 import 'leapjs-plugins';
 import * as Leap from 'leapjs';
-import { CursorStyle, CursorRingStyle } from '../CursorStyle';
 import { MyRect } from '../MyRect'
+import { CursorStyle, CursorRingStyle, LeapError, CenterDot } from '../CursorStyle';
+
 export interface LeapMotionAppProps {
     children: React.ReactNode
     topOffset?: number
     leftOffset?: number
+    showCenterDot?: boolean
 }
 
 const pBetween= (input:number, min:number, max:number): number => Math.round(((input - min) * 100) / (max - min));
 
-const LeapMotionApp: React.SFC<LeapMotionAppProps> = ({children, topOffset= 1000, leftOffset= 25}) => {
+const LeapMotionApp: React.SFC<LeapMotionAppProps> = ({children, topOffset= 900, leftOffset= 100, showCenterDot=false}) => {
     const [connectedStatus, setConnectedStatus] = useState(false);
     useEffect(() => {
-       const controller = new Leap.Controller({enableGestures: true});
-       const cursor: any = document.getElementsByClassName(styles.cursor)[0];
+       const controller = new Leap.Controller();
+       const cursor: any = document.getElementsByClassName(`cursor ${styles.cursor}`)[0];
        const cursorRing: any = document.getElementsByClassName(`cursor-ring ${styles.cursor}`)[0];
        const touchlessElements = document.querySelectorAll('.' + styles.touchless);
-
-        const touchPlane = 100;
-        const clickLength = 100;
-        const clickPos = touchPlane - clickLength;
-        let canClick = true;
-       controller.use('screenPosition');
-        controller.on('connected', ()=>{
-            // setConnectedStatus(true)
-        })
+       const touchPlane = 100;
+       const clickLength = 100;
+       const clickPos = touchPlane - clickLength;
+       let canClick = true;
+    //    cursor.addEventListener('animationend', () => cursor.classList.remove(styles.clicked));
+       controller.use('screenPosition', {positioning: 'absolute', scale: 1});
         
         const cursorClick = (element: HTMLDivElement)=>{
             const cursorRect: MyRect = new MyRect(element);
+            // cursor.classList.add(styles.clicked);
+            cursor.animate({
+                // keyframes
+                transform: ['scale(1)', 'scale(0.5)', 'scale(1)'],
+                offset: [ 0, 0.3, 1 ],
+              }, {
+                // timing options
+                duration: 400,
+                iterations: 1
+              });
 
             const rectCmp = (a:HTMLElement, b:HTMLElement)=>{
                 const aDistances = cursorRect.distanceFromElToCenter(new MyRect(a));
@@ -68,14 +75,19 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = ({children, topOffset= 1000
            
         if(hands.length){
             const hand = hands[0];
-            const zAxis = hand.screenPosition()[2];
+            const zAxis = hand.screenPosition()[2];    
+        
             if(zAxis > touchPlane){ // if not on touchplane, change cursor  position
-                cursor.style.left= hand.screenPosition()[0] + leftOffset + 'px';
-                cursor.style.top= hand.screenPosition()[1]+ topOffset + 'px';
+                
+                const handOffset = hand.type === "left" ? 320 : 0;
+
+                cursor.style.left= hand.screenPosition()[0] * 0.8 + leftOffset + handOffset + 'px';
+                cursor.style.top= hand.screenPosition()[1] * 0.79 + topOffset + 'px';
                 
             }else if(canClick && zAxis < clickPos){ // If at clickpos, and it's not clicked, run click function and set canClick to false, to not loop click
                 canClick = false;
                 cursor.style.opacity = 0.6;
+
                 cursorClick(cursor);
             }else if(!canClick && zAxis > clickPos){ // If it has been clicked, and hand is moved back, re enable click.
                 canClick = true;
@@ -91,17 +103,21 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = ({children, topOffset= 1000
                 cursorRing.style.opacity = 1 - zPercent/100;
                 cursorRing.style.height = size;
                 cursorRing.style.width = size;
+
             }else if(cursorRing && ( cursorRing.style.opacity > 0 || parseFloat(cursorRing.style.height) < 100)){ //Else default styling
                 cursorRing.style.opacity = 0;
                 cursorRing.style.height = '100%';
                 cursorRing.style.width = '100%';
+
             }
 
             if(cursor && clickPercent >= 0 && clickPercent <= 100){ //About to click, position locked and circle starts to fill
                 const newWidth = (clickPercent)/2;
-                cursor.style.borderWidth = `${Math.max(newWidth, 5)}px`
+                cursor.style.borderWidth = `${Math.max(newWidth, 5)}px`;
+
             }else if(cursor && clickPercent < 0  &&  cursor.style.borderWidth !== "5px"){ // out of click zone, default style
                 cursor.style.borderWidth ="";
+
             }else if( cursor && clickPercent > 100 ){ // if circle is not filled, and should be, fill it.
                 if(cursor.style.borderWidth !== "50px"){
                     cursor.style.borderWidth ="50px";
@@ -132,12 +148,17 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = ({children, topOffset= 1000
 
     return(
         <div className={`${styles['touchless-app']} touchless-app`}>
+            {showCenterDot && <div  style={CenterDot}></div>}
+            
             {!connectedStatus && (
-                <div style={{position: "absolute", top: 0, left:0, width:"100vw", height:"100vh", zIndex:1000, display:"flex", justifyContent:"center", alignItems:"center", background:"#fff"}}>
+                <div style={LeapError}>
                     <h1>NO LEAPMOTION DETECTED</h1>
                 </div>
             )}
-                <div className={`cursor ${styles.cursor}`} style={CursorStyle}><div className={`cursor-ring ${styles.cursor}`} style={CursorRingStyle} ></div></div>
+
+                <div className={`cursor ${styles.cursor}`} style={CursorStyle}>
+                    <div className={`cursor-ring ${styles.cursor}`} style={CursorRingStyle}></div>
+                </div>
                 {children}     
         </div>
     )

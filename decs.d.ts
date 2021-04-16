@@ -1,2 +1,2 @@
 declare module 'leapjs';
-declare module 'leapmotion-ts';
+declare module 'leapjs-plugins';

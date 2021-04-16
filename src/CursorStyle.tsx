@@ -33,3 +33,26 @@ export const CursorRingStyle: (CSSProperties) = {
     opacity: "0",
     borderStyle: "solid"
 };
+
+export const LeapError: CSSProperties = {
+    position: "absolute", 
+    top: 0, 
+    left:0, 
+    width:"100vw", 
+    height:"100vh", 
+    zIndex:1000, 
+    display:"flex", 
+    justifyContent:"center", 
+    alignItems:"center", 
+    background:"#fff"
+}
+
+export const CenterDot: CSSProperties = {
+    width: "10px", 
+    height:"10px", 
+    position:"absolute", 
+    top:"50%", 
+    left:"50%", 
+    background:"orange", 
+    transform:"translate(-50%, -50%)"
+}

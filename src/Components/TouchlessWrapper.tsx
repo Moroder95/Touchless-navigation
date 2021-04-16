@@ -6,19 +6,25 @@ import  TouchlessApp  from './TouchlessApp'
 export interface TouchlessAppWrapperProps {
     children: React.ReactNode
     secondaryThreshold?: number;
-    leapMotion?: boolean;
-    phoneController?: boolean;
+    interactionType?: 'phoneHighlight' | 'phoneCursor' | 'leapMotion';
+    leftOffset?: number;
+    topOffset?: number;
 }
+const interactionTypes = Object.freeze({
+    phoneHighlight: 0,
+    phoneCursor: 1,
+    leapMotion: 2
+});
 
-const TouchlessAppWrapper: React.SFC<TouchlessAppWrapperProps> = ({ children, secondaryThreshold, leapMotion=false, phoneController=false}) =>( 
+const TouchlessAppWrapper: React.SFC<TouchlessAppWrapperProps> = ({ children, secondaryThreshold, interactionType="phoneHighlight", leftOffset, topOffset}) =>( 
     <UidContextProvider>
-        { phoneController && 
+        { interactionTypes[interactionType]  === 0 && 
             <TouchlessApp secondaryThreshold={ secondaryThreshold }>
                 { children }
             </TouchlessApp>
         }
-        { leapMotion && 
-            <LeapMotionApp>
+        { interactionTypes[interactionType]  === 2 && 
+            <LeapMotionApp leftOffset={leftOffset} topOffset={topOffset} showCenterDot={true}>
                 { children }
             </LeapMotionApp>
         }
