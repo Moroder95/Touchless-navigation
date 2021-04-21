@@ -1,48 +1,23 @@
 /* add css module styles here (optional) */
-.touchless{}
-.touchless.active{}
-.touchless-app{}
-
-.leap-cursor{
-    box-sizing:border-box;
-    width: 100px;
-    height: 100px;
-    position: fixed;
-    margin-left: -50px;
-    margin-top: -50px;
-    z-index: 910;
-    border-color: #2E769E;
-    background-color: transparent;
-    border-radius: 100%;
-    border-width: 5px;
-    opacity: 0.8;
-    border-style: solid;   
+.grid-item {
 }
-.leap-cursor.clicked{
-    transform-origin: center;
-    animation: clickAnimation .4s 1;
-    
-}
-  
-@keyframes clickAnimation {
-    0%{transform: scale(1)}
-    30%{transform: scale(0.5)}
-    100%{transform: scale(1)}
+.touchless {
 }
 
-.leap-cursor-ring{
-    box-sizing: border-box;
-    width: 300%;
-    height: 300%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 910;
-    border-color: #2E769E;
-    background-color: transparent;
-    border-radius: 100%;
-    border-width: 5px;
-    opacity: 0;
-    border-style: solid
-};
+.touchless.active {
+}
+.touchless-app {
+}
+.cursor {
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  margin-left: -50px;
+  margin-top: -50px;
+  z-index: 910;
+  background: rgba(black, 0.3);
+  border-radius: 100%;
+  background: -webkit-radial-gradient(circle 100px 100px, #5cabff, #000);
+  background: -moz-radial-gradient(circle 100px 100px, #5cabff, #000);
+  background: radial-gradient(circle 100px 100px, #5cabff, #000);
+}

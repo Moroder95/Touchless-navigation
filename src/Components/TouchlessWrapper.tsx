@@ -1,6 +1,7 @@
 import * as React from 'react';
 import UidContextProvider from '../Context/UidContext';
 import LeapMotionApp from './LeapMotionApp';
+import PhoneCursor from './PhoneCursor';
 import LeapMotionAppPinch from './LeapMotionAppPinch';
 import  TouchlessApp  from './TouchlessApp'
 
@@ -68,5 +69,5 @@ const TouchlessAppWrapper: React.SFC<TouchlessAppWrapperProps> = (
         }
     </UidContextProvider>
 );
- 
+
 export default TouchlessAppWrapper;

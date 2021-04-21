@@ -22,9 +22,9 @@ code {
   margin: 1rem;
   border: 0px black solid;
   padding: 5px;
-  position: relative;;
+  position: relative;
 }
-.my-checkbox{
+.my-checkbox {
   position: relative;
   width: 10rem;
   color: white;
@@ -32,7 +32,7 @@ code {
   background: blueviolet;
   height: auto;
 }
-.active.my-checkbox::after{
+.active.my-checkbox::after {
   border-width: 5px;
   position: absolute;
   content: '';
@@ -42,11 +42,10 @@ code {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border:5px solid dodgerblue;
-  
+  border: 5px solid dodgerblue;
 }
 
-.active:after{
+.active:after {
   border-width: 5px;
   position: absolute;
   content: '';
@@ -56,13 +55,14 @@ code {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border:5px solid dodgerblue;
-  
+  border: 5px solid dodgerblue;
 }
 /* .cursor {
   width: 100px;
   height: 100px;
   position: fixed;
+  /* top: 0;
+  left: 0; */
   margin-left: -50px;
   margin-top: -50px;
   z-index: 910;
@@ -71,7 +71,4 @@ code {
   /* background: -webkit-radial-gradient(100px 100px, circle, #5cabff, #000);
   background: -moz-radial-gradient(100px 100px, circle, #5cabff, #000);
   background: radial-gradient(100px 100px, circle, #5cabff, #000); */
-/*} */
-
-
-
+}
