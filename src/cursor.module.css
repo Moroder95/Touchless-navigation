@@ -1,0 +1,14 @@
+.cursor {
+    width: 100px;
+    height: 100px;
+    position: fixed;
+    margin-left: -50px;
+    margin-top: -50px;
+    z-index: 910;
+    border-color: #2E769E;
+    background-color: transparent;
+    border-radius: 100%;
+    border-width: 5px;
+    opacity: 0.8;
+    border-style: solid;
+}
