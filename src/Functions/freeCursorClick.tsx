@@ -1,7 +1,9 @@
-import { MyRect } from '../MyRect'
+import { MyRect } from '../MyRect';
+import styles from '../styles.module.css';
 
-export const cursorClick = (cursorElement: HTMLDivElement, touchlessElements: NodeListOf<Element>)=>{
+export const cursorClick = (cursorElement: HTMLDivElement)=>{
     const cursorRect: MyRect = new MyRect(cursorElement);
+    const touchlessElements = document.querySelectorAll('.' + styles.touchless);
     cursorElement.animate({
         // keyframes
         transform: ['scale(1)', 'scale(0.5)', 'scale(1)'],

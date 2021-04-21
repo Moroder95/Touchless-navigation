@@ -31,7 +31,6 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = (
        const controller = new Leap.Controller();
        const cursor: any = document.getElementsByClassName(`cursor ${styles.cursor}`)[0];
        const cursorRing: any = document.getElementsByClassName(`cursor-ring ${styles.cursor}`)[0];
-       const touchlessElements = document.querySelectorAll('.' + styles.touchless);
        const clickPos = touchPlane - clickLength;
        let canClick = true;
 
@@ -55,7 +54,7 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = (
                 canClick = false;
                 cursor.style.opacity = 0.6;
 
-                cursorClick(cursor, touchlessElements);
+                cursorClick(cursor);
             }else if(!canClick && zAxis > clickPos){ // If it has been clicked, and hand is moved back, re enable click.
                 canClick = true;
                 cursor.style.opacity = '';
@@ -83,14 +82,14 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = (
                 cursor.style.borderWidth = `${Math.max(newWidth, 5)}px`;
 
             }else if(cursor && clickPercent < 0  &&  cursor.style.borderWidth !== "5px"){ // out of click zone, default style
-                cursor.style.borderWidth ="";
+                cursor.style.borderWidth ="5px";
 
             }else if( cursor && clickPercent > 100 ){ // if circle is not filled, and should be, fill it.
                 if(cursor.style.borderWidth !== "50px"){
                     cursor.style.borderWidth ="50px";
                 }
-                
             }
+     
         }
        });
        

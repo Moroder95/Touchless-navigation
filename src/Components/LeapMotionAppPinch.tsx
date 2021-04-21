@@ -32,7 +32,7 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = (
     useEffect(() => {
        const controller = new Leap.Controller();
        const cursor: any = document.getElementsByClassName(`cursor ${styles.cursor}`)[0];
-       const touchlessElements = document.querySelectorAll('.' + styles.touchless);
+
        let canClick = true;
 
        controller.use('screenPosition', {positioning: 'absolute', scale: 1});
@@ -51,7 +51,7 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = (
                 canClick = false;
                 cursor.style.opacity = 0.6;
                 
-                cursorClick(cursor, touchlessElements);
+                cursorClick(cursor);
             }else if(!canClick && strength <= strengthBeforeClickReset){ // If it has been clicked, and hand is moved back, re enable click.
                 canClick = true;
                 cursor.style.opacity = '';
