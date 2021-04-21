@@ -9,8 +9,10 @@ export interface MobileQRProps {
  
 const MobileQR: React.SFC<MobileQRProps> = ({logLink = false }) => {
     
-    const  { uid } = useContext(UidContext);
-    const link = `${host}/phone?id=${uid}`;
+    const  { uid, freeCursor } = useContext(UidContext);
+    
+    const touchpad = freeCursor ? 'TouchPad' : 'Highlight';
+    const link = `${host}/phone${touchpad}?id=${uid}`;
 
     logLink ? console.log(link) : null;
     

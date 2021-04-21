@@ -48,7 +48,7 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
   children,
   secondaryThreshold = 1
 }) => {
-  const { uid, setConnection, next, customKeys } = React.useContext(UidContext);
+  const { uid, setConnection, next, customKeys} = React.useContext(UidContext);
 
   React.useEffect(() => {
     // runs if next state is update in context, to reset the controlled element
@@ -80,6 +80,7 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
   }, [next]);
 
   React.useEffect(() => {
+    
     const keyEvent = (e: KeyboardEvent) => {
       // Get the currently selected Element from the DOM
       const controlledElement: HTMLDivElement | null = document.querySelector(

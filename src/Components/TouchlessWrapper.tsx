@@ -53,9 +53,9 @@ const TouchlessAppWrapper: React.SFC<TouchlessAppWrapperProps> = (
             </TouchlessApp>
         }
         { interactionTypes[interactionType]  === 1 &&  // Phone Cursor
-            <TouchlessApp secondaryThreshold={ secondaryThreshold }>
+            <PhoneCursor>
                 { children }
-            </TouchlessApp>
+            </PhoneCursor>
         }
         { interactionTypes[interactionType]  === 2 && // Leap Motion
             <LeapMotionApp leftOffset={leftOffset} topOffset={topOffset} showCenterDot={devOptions} clickLength={clickLength} touchPlane={touchPlane}>

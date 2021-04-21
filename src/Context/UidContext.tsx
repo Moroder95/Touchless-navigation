@@ -9,8 +9,10 @@ export type UidContextType = {
   setNext: Dispatch<SetStateAction<number>>;
   customKeys: CustomKeysType;
   setCustomKeys: Dispatch<SetStateAction<CustomKeysType>>;
+  freeCursor: boolean; 
+  setFreeCursor: Dispatch<SetStateAction<boolean>>;
  }
-export const UidContext = createContext<UidContextType>({uid:'', newUid: ()=>{}, connection: false, setConnection: ()=> {}, next: 0, setNext: ()=>{}, setCustomKeys: ()=>{}, customKeys:{}});
+export const UidContext = createContext<UidContextType>({uid:'', newUid: ()=>{}, connection: false, setConnection: ()=> {}, next: 0, setNext: ()=>{}, setCustomKeys: ()=>{}, customKeys:{}, freeCursor: false, setFreeCursor: ()=> {}});
 
 export interface UidContextProps {
     children: React.ReactNode
@@ -25,6 +27,7 @@ export type CustomKeysType = {
 const UidContextProvider: React.SFC<UidContextProps> = ({children}) => {
   const [uid, setUid] = useState(uuid());
   const [connection, setConnection] = useState<boolean>(false);
+  const [freeCursor, setFreeCursor] = useState<boolean>(false);
   const [next, setNext] = useState(0);
   const [customKeys, setCustomKeys] = useState<CustomKeysType>({});
   const newUid = ()=>{
@@ -40,7 +43,9 @@ const UidContextProvider: React.SFC<UidContextProps> = ({children}) => {
       next, 
       setNext, 
       customKeys,
-      setCustomKeys
+      setCustomKeys,
+      freeCursor,
+      setFreeCursor
     }}>
       { children }
     </UidContext.Provider>

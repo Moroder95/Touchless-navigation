@@ -1,6 +1,4 @@
 /* add css module styles here (optional) */
-.grid-item {
-}
 .touchless {
 }
 
@@ -20,4 +18,5 @@
   background: -webkit-radial-gradient(circle 100px 100px, #5cabff, #000);
   background: -moz-radial-gradient(circle 100px 100px, #5cabff, #000);
   background: radial-gradient(circle 100px 100px, #5cabff, #000);
+  color: orange;
 }

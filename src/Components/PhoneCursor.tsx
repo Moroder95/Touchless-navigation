@@ -3,13 +3,15 @@ import { io, Socket } from 'socket.io-client';
 import { host } from '../Settings/host';
 import { UidContext } from '../Context/UidContext';
 import styles from '../styles.module.css';
+import { cursorClick } from '../Functions/freeCursorClick';
+import { CursorStyle } from '../CursorStyle';
 
 export interface PhoneCursorProps {
   children: React.ReactNode;
 }
 
 const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
-  const { uid, setConnection } = useContext(UidContext);
+  const { uid, setConnection, setFreeCursor } = useContext(UidContext);
 
   // Setting constants used when calculating cursor movement
   const EXPONENT = 2;
@@ -18,21 +20,22 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
   const CURSOR_CENTER_OFFSET = 50;
 
   useEffect(() => {
+    setFreeCursor(true);
     let socket: Socket | null = null;
+    const touchlessElements = document.querySelectorAll('.' + styles.touchless);
     const windowSize = {
       width: window.innerWidth,
       height: window.innerHeight
     };
-    const cursor = document.getElementsByClassName(
-      'cursor'
-    )[0] as HTMLDivElement;
+    const cursor = document.getElementsByClassName(`cursor ${styles.cursor}`)[0] as HTMLDivElement;
     cursor.style.left = '0px';
     cursor.style.top = '0px';
 
     if (uid) {
       socket = io(host, {
         auth: {
-          token: uid
+          token: uid,
+          type: 'cursor'
         }
       });
 
@@ -72,9 +75,7 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
       socket.on('key event', ({ key }: { key: string }) => {
         console.log('key event registered', key);
         // dispatch key event for
-        document.dispatchEvent(
-          new KeyboardEvent('keydown', { key: key, bubbles: true })
-        );
+        cursorClick(cursor, touchlessElements);
       });
 
       socket.on('room size changed', ({ users }: any) => {
@@ -97,7 +98,7 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
 
   return (
     <div>
-      <div className={styles.cursor + ' cursor'}></div>
+      <div className={styles.cursor + ' cursor'} style={CursorStyle}></div>
       {children}
     </div>
   );
