@@ -10,7 +10,12 @@ export interface PhoneCursorProps {
 
 const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
   const { uid, setConnection } = useContext(UidContext);
-  const compressor = 0.1;
+
+  // Setting constants used when calculating cursor movement
+  const EXPONENT = 2;
+  const MULTIPLIER_X = 0.13;
+  const MULTIPLIER_Y = 0.1;
+  const CURSOR_CENTER_OFFSET = 50;
 
   useEffect(() => {
     let socket: Socket | null = null;
@@ -18,7 +23,6 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
       width: window.innerWidth,
       height: window.innerHeight
     };
-    console.log(windowSize);
     const cursor = document.getElementsByClassName(
       'cursor'
     )[0] as HTMLDivElement;
@@ -38,25 +42,36 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
         'cursor move',
         ({ deltaX, deltaY }: { deltaX: number; deltaY: number }) => {
           const cursorPos = cursor.getBoundingClientRect();
-          let newX = cursorPos.x + Math.ceil(deltaX * compressor) + 50;
-          let newY = cursorPos.y + Math.ceil(deltaY * compressor) + 50;
+          const signX = deltaX > 0 ? 1 : -1;
+          const signY = deltaY > 0 ? 1 : -1;
 
-          // Movement along X-axis
+          // Translating the delta-input to move-output
+          // Fast movements yield higher values for increased movability
+          // Slow movements yield lower values for increased precision
+          const moveX =
+            Math.ceil(Math.pow(deltaX, EXPONENT) * MULTIPLIER_X) * signX;
+          const moveY =
+            Math.ceil(Math.pow(deltaY, EXPONENT) * MULTIPLIER_Y) * signY;
+
+          // New cursor position is calculated
+          let newX = cursorPos.x + moveX + CURSOR_CENTER_OFFSET;
+          let newY = cursorPos.y + moveY + CURSOR_CENTER_OFFSET;
+
+          // Movement along X-axis if new cursor position is within window frame
           if (deltaX !== 0 && newX < windowSize.width && newX > -1) {
             cursor.style.left = newX + 'px';
           }
 
-          // Movement along Y-axis
+          // Movement along Y-axis if new cursor position is within window frame
           if (deltaY !== 0 && newY < windowSize.height && newY > -1) {
             cursor.style.top = newY + 'px';
           }
-          // console.log('x', cursor.style.left, 'y', cursor.style.top);
         }
       );
 
       socket.on('key event', ({ key }: { key: string }) => {
         console.log('key event registered', key);
-        // dispatch key events for
+        // dispatch key event for
         document.dispatchEvent(
           new KeyboardEvent('keydown', { key: key, bubbles: true })
         );
