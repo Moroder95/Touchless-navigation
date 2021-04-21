@@ -5,7 +5,7 @@
     position: fixed;
     margin-left: -50px;
     margin-top: -50px;
-    transform: translate(-50%, -50%);
+    /* transform: translate(-50%, -50%); */
     z-index: 910;
     border-color: #2E769E;
     background-color: transparent;

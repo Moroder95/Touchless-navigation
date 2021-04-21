@@ -6,4 +6,4 @@ import App from './App'
 import { TouchlessApp } from 'touchless-navigation';
 
 
-ReactDOM.render(<TouchlessApp interactionType="leapMotion"><App /></TouchlessApp>, document.getElementById('root'))
+ReactDOM.render(<TouchlessApp interactionType="leapMotionPinch"><App /></TouchlessApp>, document.getElementById('root'))
