@@ -24,9 +24,7 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
     useEffect(() => {
         setFreeCursor(true);
         // let socket: Socket | null = null;
-        const touchlessElements = document.querySelectorAll(
-            '.' + styles.touchless
-        );
+       
         const windowSize = {
             width: window.innerWidth,
             height: window.innerHeight
