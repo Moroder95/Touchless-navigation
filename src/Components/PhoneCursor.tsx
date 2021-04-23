@@ -24,7 +24,7 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
     useEffect(() => {
         setFreeCursor(true);
         // let socket: Socket | null = null;
-       
+
         const windowSize = {
             width: window.innerWidth,
             height: window.innerHeight
@@ -77,11 +77,10 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
                 }
             );
 
-      socket.on('key event', ({ key }: { key: string }) => {
-        console.log('key event registered', key);
-        // dispatch key event for
-        cursorClick(cursor);
-      });
+            socket.on('key event', () => {
+                // dispatch key event for
+                cursorClick(cursor);
+            });
 
             socket.on('room size changed', ({ users }: any) => {
                 if (users === 2) {
