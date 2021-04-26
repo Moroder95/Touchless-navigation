@@ -24,12 +24,12 @@
 
 ## 1. Description
 
-A component library that can be used to enhance your React App, so that it can controlled without using touch.
+A component library that can be used to enhance your React App, so that it can be controlled without using touch.
 
 ## 2. About
 
 As a part of Master Thesis in Interaction Design at AAU, we have created a small component library for React.  
-The aim of the library is to enable developers to create React Apps that can be controlled without the need of touch at the display. Currently the library only supports interactions through users' personal phone by scanning a QR code that will give them control over the app. The library can be used to create the application that runs on public displays, thereby allowing users to interact with these displays without having to touch them directly.
+The aim of the library is to enable developers to create React Apps that can be controlled without the need of touch at the display. Currently the library supports interactions through users' personal phone by scanning a QR code that will give them control over the app or through using a Leap Motion Controller to detect the users hand. The library can be used to create the application that runs on public displays, thereby allowing users to interact with these displays without having to touch them directly.
 
 ## 3. Install
 
