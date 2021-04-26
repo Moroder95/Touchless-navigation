@@ -69,13 +69,15 @@ The \<MobileQR /> tag insert a unique QR code that contains a unique link, that 
 
 ## 5. Hooks
 
-| Hook name           | Returns                                   | Input                                                                                                                                                                      | Use                                                                                                                                                                                                                                                      |
-| ------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| useConnectionChange | boolean                                   | void                                                                                                                                                                       | Can be used to track status of connection on mobile. Value updates if a user connects with the QR code or disconnects                                                                                                                                    |
-| useGoToStartElement | function                                  | void                                                                                                                                                                       | Can be called if you want to go back to the start element or needs to reset if you change page                                                                                                                                                           |
-| useNewSession       | function                                  | void                                                                                                                                                                       | Can be called if you want to reset the connection session, thereby breaking connection with connected device and allows for a new device                                                                                                                 |
-| useCustomKeys       | `{ initiate: function, clear: function }` | `{ swipeUp?: [key value as string], swipeDown?: [key value as string],swipeLeft?: [key value as string],swipeRight?: [key value as string],click?: [key value as string]}` | Can be used to overwrite gestures and translate them into other key events. You can then bind key events to these and create custom behaviour. After execution of the initate function, custom key events works until the clear function has been called |
-| usePhoneUI          | function                                  | string                                                                                                                                                                     | Can be called if you want to change to UI on the connected phone. Takes HTML with inline CSS for styling as input. Calling this function will automatically disconnect the phone from the server.                                                        |
+| Hook name           | Returns                                                                                                                                         | Input                                                                                                                                                                      | Use                                                                                                                                                                                                                                                      |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| useConnectionChange | boolean                                                                                                                                         | void                                                                                                                                                                       | Can be used to track status of connection on mobile. Value updates if a user connects with the QR code or disconnects                                                                                                                                    |
+| useGoToStartElement | function                                                                                                                                        | void                                                                                                                                                                       | Can be called if you want to go back to the start element or needs to reset if you change page                                                                                                                                                           |
+| useNewSession       | function                                                                                                                                        | void                                                                                                                                                                       | Can be called if you want to reset the connection session, thereby breaking connection with connected device and allows for a new device                                                                                                                 |
+| useCustomKeys       | `{ initiate: function, clear: function }`                                                                                                       | `{ swipeUp?: [key value as string], swipeDown?: [key value as string],swipeLeft?: [key value as string],swipeRight?: [key value as string],click?: [key value as string]}` | Can be used to overwrite gestures and translate them into other key events. You can then bind key events to these and create custom behaviour. After execution of the initate function, custom key events works until the clear function has been called |
+| usePhoneUI          | function                                                                                                                                        | string                                                                                                                                                                     | Can be called if you want to change to UI on the connected phone. Takes HTML with inline CSS for styling as input. Calling this function will automatically disconnect the phone from the server.                                                        |
+| useRedirectPhone    | function                                                                                                                                        |
+| void                | Returns a function that can be called if you want to redirect the connected phone to another URL. The returned function takes a string as input |
 
 ## 6. Usage
 
@@ -110,7 +112,8 @@ import {  TouchlessApp,
           useGoToStartElement,
           useNewSession,
           useCustomKeys,
-          usePhoneUI } from 'touchless-navigation'
+          usePhoneUI,
+          useRedirectPhone } from 'touchless-navigation'
 
 const YourApp = () => {
   // Custom hook: Returns true if connection is established
@@ -122,7 +125,7 @@ const YourApp = () => {
   // Custom Hook: Returns a function that can be called to reset the session ID, there by creating a new QR code and connection to the socket server
   const newSession = useNewSession();
 
-  // Custom hook: Input is the gestures you want to overwrite to bind to other keys, so that you can make custom functions to run instead of default behavior, all are optional. Returns an object containing two functions: initiate and clear. When calling initiate all gestures are replaced, until the clear function is called.
+  // Custom hook: Input is the gestures you want to overwrite to bind to other keys, so that you can make custom functions to run instead of default behavior, all are optional. Returns an object containing two functions: initiate and clear. When calling initiate all gestures are replaced, until the clear function is called
   const {initiate: customKeysInit, clear: customKeyClear} = useCustomKeys({
     swipeUp: 'w',
     swipeDown: 's',
@@ -137,6 +140,9 @@ const YourApp = () => {
         <p>The phone UI was just changed</p>
       </div>`
     );
+
+  // Custom hook: Returns a function that can be called to redirect the phone. The returned function takes a string as input. When the returned function is called, the phone will disconnect from the session
+  const redirectPhone = useRedirectPhone();
 
   useEffect(()=>{
     console.log('I run every time the a users connects to me or disconnects')
@@ -178,6 +184,11 @@ const YourApp = () => {
     <Touchless onClick={setPhoneUI}> {/* change the phone UI and disconnect the phone */}
       <button>
         Change the phone UI
+      </button>
+    </Touchless>
+    <Touchless onClick={() => redirectPhone('https://npmjs.com')}> {/* redirect to another URL and disconnect the phone */}
+      <button>
+        Redirect the phone
       </button>
     </Touchless>
   )

@@ -64,6 +64,13 @@ export function useNewSession() {
     return newUid;
 }
 
+export function useRedirectPhone() {
+    return (href: string) => {
+        console.log('redirect', href);
+        socketConnection.emit('redirect phone', href);
+    };
+}
+
 export function usePhoneUI(html: string) {
-    return () => socketConnection.emit('hello world', html);
+    return () => socketConnection.emit('update phone UI', html);
 }

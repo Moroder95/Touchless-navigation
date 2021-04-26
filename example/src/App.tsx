@@ -7,7 +7,8 @@ import {
     useGoToStartElement,
     useCustomKeys,
     useNewSession,
-    usePhoneUI
+    usePhoneUI,
+    useRedirectPhone
 } from 'touchless-navigation';
 import MyCheckbox from './MyCheckbox';
 import TestBox from './TestBox';
@@ -28,6 +29,7 @@ const App = () => {
             </button>
         </div>`
     );
+    const redirectPhone = useRedirectPhone();
 
     const activateCustomKeys = useCustomKeys({
         swipeUp: 'w',
@@ -49,7 +51,10 @@ const App = () => {
             <button onClick={activateCustomKeys.clear}>CLEAR </button>
             <button onClick={activateCustomKeys.initiate}>Initiate </button>
             <button onClick={newSession}>Start New Session</button>
-            <button onClick={setPhoneUI}>socket emit message</button>
+            <button onClick={setPhoneUI}>Socket emit message</button>
+            <button onClick={() => redirectPhone('https://google.com')}>
+                Redirect phone
+            </button>
             {test.map((el, index) => {
                 return <TestBox el={el} key={index}></TestBox>;
             })}
