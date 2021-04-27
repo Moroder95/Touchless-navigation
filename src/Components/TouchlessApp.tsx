@@ -49,7 +49,7 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
     children,
     secondaryThreshold = 1
 }) => {
-    const { uid, setConnection, next, customKeys } = React.useContext(
+    const { uid, setConnection, next, customKeys, setFreeCursor } = React.useContext(
         UidContext
     );
 
@@ -83,6 +83,7 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
     }, [next]);
 
     React.useEffect(() => {
+        setFreeCursor(false);
         const keyEvent = (e: KeyboardEvent) => {
             // Get the currently selected Element from the DOM
             const controlledElement: HTMLDivElement | null = document.querySelector(
@@ -119,6 +120,7 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
 
             // Function the alters the variable called Closest, it calls itself no more than the times maxLoops contains.
             const findClosestElement = (thresMultplier: number) => {
+                // const leftRightTopBottom = {x: {'-1': 'right', '1': 'left'}, y:{'-1': 'top', '1': 'bottom'}};
                 //Goes through the list of all the elements that can potentially be selected
                 elements.forEach((el) => {
                     //closest is null and the element that is controlled is not the current element then. This only executes when no closest element has been set.
@@ -135,6 +137,7 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
                         // It is muliplied by direction to get positive values if it's the direction the arrowKey is pointing at
                         const newDifference =
                             (check[xy] - controlled[xy]) * direction;
+
                         //newDifferenceSecondary stores the difference in position on SECONDARY axis between the current Element in the nodeList and the controlled Elements.
                         //The value is absolute as it can be to either side of the controlled Element
                         const newDifferenceSecondary = Math.abs(
@@ -158,13 +161,17 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
                         const controlled = getCenterPos(controlledElement); //get x, y coordinates of the controlled element
                         const check = getCenterPos(el as HTMLDivElement); //get x, y coordinates of the current element in the nodeList
                         const close = getCenterPos(closest); //get x, y coordinates of the currently closest element in the nodeList
-
+                        // const secondarySides = leftRightTopBottom[xy2];
+                        // const controlledSide: string = leftRightTopBottom[xy][direction.toString()];
+                        // const checkSide:string = leftRightTopBottom[xy][(direction*-1).toString()];
                         // closestDifference and newDifference stores the difference in position on PRIMARY axis between the currently closest and current Element in the nodeList and the controlled Elements.
                         // It is muliplied by direction to get positive values if it's the direction the arrowKey is pointing at
                         const closestDifference =
                             (close[xy] - controlled[xy]) * direction;
+                            // (close.pos![checkSide] - controlled.pos![controlledSide]) * direction;
                         const newDifference =
                             (check[xy] - controlled[xy]) * direction;
+                            // (check.pos![checkSide] - controlled.pos![controlledSide]) * direction;
 
                         //newDifferenceSecondary and newDifferenceSecondary stores the difference in position on SECONDARY axis between the currently closest and current Element in the nodeList and the controlled Elements.
                         //The value is absolute as it can be to either side of the controlled Element
@@ -174,6 +181,15 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
                         const newDifferenceSecondary = Math.abs(
                             check[xy2] - controlled[xy2]
                         );
+                        // const closestDifferenceSecondary = Math.min(Math.abs(
+                        //     close.pos![secondarySides['-1']] - controlled.pos![secondarySides['-1']]),
+                        //     Math.abs(close.pos![secondarySides['1']] - controlled.pos![secondarySides['1']])
+                        // );
+                        // const newDifferenceSecondary = Math.min(Math.abs(
+                        //     check.pos![secondarySides['-1']] - controlled.pos![secondarySides['-1']]),
+                        //     Math.abs(check.pos![secondarySides['1']] - controlled.pos![secondarySides['1']])
+                        // );
+                        
 
                         if (
                             newDifference > 0 &&
