@@ -38,11 +38,13 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = (
 
        controller.on('frame', function (frame: any) {
            const { hands } = frame;
-           
-        if(hands.length){
-            const hand = hands[0];
-            const zAxis = hand.screenPosition()[2];    
 
+        if(hands.length){
+
+            cursor.style.display= 'block';
+            const hand = hands[0];
+            const zAxis = hand.screenPosition()[2];
+         
             if(zAxis > touchPlane){ // if not on touchplane, change cursor  position
                 
                 const handOffset = hand.type === "left" ? 320 : 0;
@@ -53,6 +55,7 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = (
             }else if(canClick && zAxis < clickPos){ // If at clickpos, and it's not clicked, run click function and set canClick to false, to not loop click
                 canClick = false;
                 cursor.style.opacity = 0.6;
+                
 
                 cursorClick(cursor);
             }else if(!canClick && zAxis > clickPos){ // If it has been clicked, and hand is moved back, re enable click.
@@ -90,7 +93,10 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = (
                 }
             }
      
+        }else{
+            cursor.style.display= 'none';
         }
+
        });
        
        controller.on('deviceRemoved', onDeviceRemoved);

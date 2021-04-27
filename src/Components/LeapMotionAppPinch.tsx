@@ -41,6 +41,7 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = (
            const { hands } = frame;
            
         if(hands.length){
+            cursor.style.display= 'block';
             const hand = hands[0]; 
             const strength = hand[`${grabOrPinch}Strength`];
             const handOffset = hand.type === "left" ? 320 : 0;
@@ -73,6 +74,8 @@ const LeapMotionApp: React.SFC<LeapMotionAppProps> = (
                 }
                 
             }
+        }else{
+            cursor.style.display= 'none';
         }
        });
        

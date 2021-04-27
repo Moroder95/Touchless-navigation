@@ -6,7 +6,7 @@ import App from './App';
 import { TouchlessApp } from 'touchless-navigation';
 
 ReactDOM.render(
-    <TouchlessApp interactionType='phoneHighlight' secondaryThreshold={100}>
+    <TouchlessApp interactionType='leapMotion' secondaryThreshold={100}>
         <App />
     </TouchlessApp>,
     document.getElementById('root')
