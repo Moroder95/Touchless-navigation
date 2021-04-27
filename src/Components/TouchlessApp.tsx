@@ -1,8 +1,7 @@
 import * as React from 'react';
 import styles from '../styles.module.css';
-// import { io, Socket } from 'socket.io-client';
-// import { host } from '../Settings/host';
 import { UidContext } from '../Context/UidContext';
+import { CustomKeysContext } from '../Context/CustomKeysContext';
 import { useEffect } from 'react';
 import * as socketConnection from '../Functions/socketConnection';
 
@@ -45,14 +44,19 @@ const getCenterPos = (element: HTMLDivElement | null): coordinateObj => {
     return { x: (x / appWidth) * 100, y: (y / appHeight) * 100, pos };
 };
 
+const calcIsOverlap = (pos1: DOMRect, pos2: DOMRect, side1: string, side2: string) => 
+    pos1[side1] <= pos2[side2] && pos1[side2] >= pos2[side1];
+
 const TouchlessApp: React.SFC<TouchlessAppProps> = ({
     children,
     secondaryThreshold = 1
 }) => {
-    const { uid, setConnection, next, customKeys, setFreeCursor } = React.useContext(
+    const { uid, setConnection, next, setFreeCursor } = React.useContext(
         UidContext
     );
-
+    const { customKeys } = React.useContext(CustomKeysContext);
+    let socket = socketConnection.connectToSocket();
+    
     React.useEffect(() => {
         // runs if next state is update in context, to reset the controlled element
         const elements = document.querySelectorAll('.' + styles.touchless); // Get all elements that can be controlled
@@ -82,9 +86,16 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
         }
     }, [next]);
 
-    React.useEffect(() => {
+    useEffect(()=>{
+        return()=>{
+            socket?.disconnect();
+        }
+    },[])
+
+    useEffect(() => {
         setFreeCursor(false);
         const keyEvent = (e: KeyboardEvent) => {
+            console.log('running keyevent');
             // Get the currently selected Element from the DOM
             const controlledElement: HTMLDivElement | null = document.querySelector(
                 '.' + styles.touchless + '.' + styles.active
@@ -117,10 +128,14 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
             const sThreshold = secondaryThreshold; //Threshold is how far of an element is allowed to be positioned in the secondary direction in relation to the starting point
             let loops = 1; // Variable to keep count of loops made and used for multiplying the threshold, to gradually find closest element in relation to the secodnary axis.
             const maxLoops = 15; // Variable to stop if loops variable exceeds this number
-
+            const leftRightTopBottom = Object.freeze({x: {'1': 'right', '-1': 'left'}, y:{'-1': 'top', '1': 'bottom'}});
+            const controlledSide: string = leftRightTopBottom[xy][direction.toString()];
+            const checkSide:string = leftRightTopBottom[xy][(direction*-1).toString()];
+            
+            const secondarySides = leftRightTopBottom[xy2];
             // Function the alters the variable called Closest, it calls itself no more than the times maxLoops contains.
             const findClosestElement = (thresMultplier: number) => {
-                // const leftRightTopBottom = {x: {'-1': 'right', '1': 'left'}, y:{'-1': 'top', '1': 'bottom'}};
+                
                 //Goes through the list of all the elements that can potentially be selected
                 elements.forEach((el) => {
                     //closest is null and the element that is controlled is not the current element then. This only executes when no closest element has been set.
@@ -133,22 +148,26 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
                         const controlled = getCenterPos(controlledElement); //get x, y coordinates of the controlled element
                         const check = getCenterPos(el as HTMLDivElement); //get x, y coordinates of the current element in the nodeList
 
+                       
                         // newDifference stores the difference in position on PRIMARY axis between the current Element in the nodeList and the controlled Elements.
                         // It is muliplied by direction to get positive values if it's the direction the arrowKey is pointing at
                         const newDifference =
-                            (check[xy] - controlled[xy]) * direction;
+                            // (check[xy] - controlled[xy]) * direction;
+                            (check.pos![checkSide] - controlled.pos![controlledSide]) * direction;
 
                         //newDifferenceSecondary stores the difference in position on SECONDARY axis between the current Element in the nodeList and the controlled Elements.
                         //The value is absolute as it can be to either side of the controlled Element
                         const newDifferenceSecondary = Math.abs(
                             check[xy2] - controlled[xy2]
                         );
+ 
+                        const isOverlap = calcIsOverlap(check.pos!, controlled.pos!, secondarySides['-1'], secondarySides['1']);
 
                         //If the newDifference is above 0, it's in the right direction AND the difference on the secondary axis is below the threshold
                         //set the current element in the nodelist as the closest for now.
-                        if (
-                            newDifference > 0 &&
-                            newDifferenceSecondary < sThreshold * thresMultplier
+                        if
+                            (newDifference > 0 &&
+                            (isOverlap || newDifferenceSecondary < sThreshold * thresMultplier)
                         ) {
                             closest = el as HTMLDivElement;
                         }
@@ -161,17 +180,15 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
                         const controlled = getCenterPos(controlledElement); //get x, y coordinates of the controlled element
                         const check = getCenterPos(el as HTMLDivElement); //get x, y coordinates of the current element in the nodeList
                         const close = getCenterPos(closest); //get x, y coordinates of the currently closest element in the nodeList
-                        // const secondarySides = leftRightTopBottom[xy2];
-                        // const controlledSide: string = leftRightTopBottom[xy][direction.toString()];
-                        // const checkSide:string = leftRightTopBottom[xy][(direction*-1).toString()];
+                        
                         // closestDifference and newDifference stores the difference in position on PRIMARY axis between the currently closest and current Element in the nodeList and the controlled Elements.
                         // It is muliplied by direction to get positive values if it's the direction the arrowKey is pointing at
                         const closestDifference =
-                            (close[xy] - controlled[xy]) * direction;
-                            // (close.pos![checkSide] - controlled.pos![controlledSide]) * direction;
+                            // (close[xy] - controlled[xy]) * direction;
+                            (close.pos![checkSide] - controlled.pos![controlledSide]) * direction;
                         const newDifference =
-                            (check[xy] - controlled[xy]) * direction;
-                            // (check.pos![checkSide] - controlled.pos![controlledSide]) * direction;
+                            // (check[xy] - controlled[xy]) * direction;
+                            (check.pos![checkSide] - controlled.pos![controlledSide]) * direction;
 
                         //newDifferenceSecondary and newDifferenceSecondary stores the difference in position on SECONDARY axis between the currently closest and current Element in the nodeList and the controlled Elements.
                         //The value is absolute as it can be to either side of the controlled Element
@@ -181,22 +198,15 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
                         const newDifferenceSecondary = Math.abs(
                             check[xy2] - controlled[xy2]
                         );
-                        // const closestDifferenceSecondary = Math.min(Math.abs(
-                        //     close.pos![secondarySides['-1']] - controlled.pos![secondarySides['-1']]),
-                        //     Math.abs(close.pos![secondarySides['1']] - controlled.pos![secondarySides['1']])
-                        // );
-                        // const newDifferenceSecondary = Math.min(Math.abs(
-                        //     check.pos![secondarySides['-1']] - controlled.pos![secondarySides['-1']]),
-                        //     Math.abs(check.pos![secondarySides['1']] - controlled.pos![secondarySides['1']])
-                        // );
-                        
+      
+                        const isOverlap = calcIsOverlap(check.pos!, controlled.pos!, secondarySides['-1'], secondarySides['1']);
 
                         if (
                             newDifference > 0 &&
                             newDifferenceSecondary <=
                                 closestDifferenceSecondary &&
                             newDifference <= closestDifference &&
-                            newDifferenceSecondary < sThreshold * thresMultplier
+                           ( isOverlap || newDifferenceSecondary < sThreshold * thresMultplier)
                         ) {
                             closest = el as HTMLDivElement;
                         }
@@ -218,15 +228,17 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
             }
         };
 
+        console.log('adding eventlistener');
         document.addEventListener('keydown', keyEvent); // bind eventlistener
 
         return () => {
+            console.log('removing eventlistener');
             document.removeEventListener('keydown', keyEvent); // remove eventlistener is unmount
         };
     }, [secondaryThreshold]);
 
-    let socket = socketConnection.connectToSocket();
-
+    
+    
     useEffect(() => {
         // let socket: Socket | null = null;
 
@@ -241,6 +253,7 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
             socket.emit('initialize room');
             socket.on('key event', ({ key }: { key: string }) => {
                 // dispatch key events for
+                console.log('socket key event')
                 if (Object.keys(customKeys).length > 0) {
                     const customGestureValue = customKeyGesture(key);
                     const customKey = customKeys.hasOwnProperty(
@@ -274,9 +287,9 @@ const TouchlessApp: React.SFC<TouchlessAppProps> = ({
                 socket?.emit('host disconnected');
             });
         }
-        return () => {
-            socket?.disconnect();
-        };
+        // return ()=>{
+        //     socket?.disconnect();
+        // }
     }, [uid, customKeys]);
 
     return (

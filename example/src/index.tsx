@@ -3,11 +3,8 @@ import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { TouchlessApp } from 'touchless-navigation';
 
 ReactDOM.render(
-    <TouchlessApp interactionType='leapMotion' secondaryThreshold={100}>
-        <App />
-    </TouchlessApp>,
+        <App />,
     document.getElementById('root')
 );

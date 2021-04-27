@@ -5,7 +5,7 @@ export { default as MobileQR } from './Components/MobileQR';
 import { useContext } from 'react';
 import * as socketConnection from './Functions/socketConnection';
 import { UidContext } from './Context/UidContext';
-import { CustomKeysType } from './Context/UidContext';
+import { CustomKeysContext, CustomKeysType } from './Context/CustomKeysContext';
 export { CustomKeysType };
 
 export function useConnectionChange() {
@@ -43,19 +43,21 @@ const isEqual = (obj1: object, obj2: object) => {
     return true;
 };
 export function useCustomKeys(customKeysObject: CustomKeysType) {
-    const { setCustomKeys, customKeys } = useContext(UidContext);
+    const { setCustomKeys, customKeys } = useContext(CustomKeysContext);
 
     return {
         initiate() {
-            if (
-                Object.entries(customKeysObject).length > 0 &&
-                !isEqual(customKeys, customKeysObject)
-            ) {
+            // if (
+            //     // Object.entries(customKeysObject).length > 0
+            // //     !isEqual(customKeys, customKeysObject)
+            // ) {
                 setCustomKeys(customKeysObject);
-            }
+            // }
         },
         clear() {
-            setCustomKeys({});
+            if(Object.entries(customKeys).length > 0){
+                setCustomKeys({});
+            }   
         }
     };
 }

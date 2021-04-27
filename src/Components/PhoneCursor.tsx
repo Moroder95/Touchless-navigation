@@ -21,6 +21,13 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
     const CURSOR_CENTER_OFFSET = 50;
 
     let socket = socketConnection.connectToSocket();
+
+    useEffect(()=>{
+        return()=>{
+            socket?.disconnect();
+        }
+    },[])
+
     useEffect(() => {
         setFreeCursor(true);
 
@@ -85,10 +92,6 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
                 socket?.emit('host disconnected');
             });
         }
-
-        return () => {
-            socket?.disconnect();
-        };
     }, [uid]);
 
     return (

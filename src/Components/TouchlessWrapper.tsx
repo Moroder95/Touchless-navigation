@@ -4,6 +4,7 @@ import LeapMotionApp from './LeapMotionApp';
 import PhoneCursor from './PhoneCursor';
 import LeapMotionAppPinch from './LeapMotionAppPinch';
 import  TouchlessApp  from './TouchlessApp'
+import CustomKeysContextProvider from '../Context/CustomKeysContext';
 
 export interface TouchlessAppWrapperProps {
     children: React.ReactNode
@@ -47,26 +48,28 @@ const TouchlessAppWrapper: React.SFC<TouchlessAppWrapperProps> = (
         touchPlane
     }) =>( 
     <UidContextProvider>
-        { interactionTypes[interactionType]  === 0 && // Phone Highlight
-            <TouchlessApp secondaryThreshold={ secondaryThreshold }>
-                { children }
-            </TouchlessApp>
-        }
-        { interactionTypes[interactionType]  === 1 &&  // Phone Cursor
-            <PhoneCursor>
-                { children }
-            </PhoneCursor>
-        }
-        { interactionTypes[interactionType]  === 2 && // Leap Motion
-            <LeapMotionApp leftOffset={leftOffset} topOffset={topOffset} showCenterDot={devOptions} clickLength={clickLength} touchPlane={touchPlane}>
-                { children }
-            </LeapMotionApp>
-        }
-        { interactionTypes[interactionType]  === 3 && // Leap Motion Pinch
-            <LeapMotionAppPinch leftOffset={leftOffset} topOffset={topOffset} showCenterDot={devOptions} grabOrPinch={pinchOrGrab} strengthBeforeClickReset={strengthBeforeClickReset} strengthToClick={strengthToClick}>
-                { children }
-            </LeapMotionAppPinch>
-        }
+        <CustomKeysContextProvider>
+            { interactionTypes[interactionType]  === 0 && // Phone Highlight
+                <TouchlessApp secondaryThreshold={ secondaryThreshold }>
+                    { children }
+                </TouchlessApp>
+            }
+            { interactionTypes[interactionType]  === 1 &&  // Phone Cursor
+                <PhoneCursor>
+                    { children }
+                </PhoneCursor>
+            }
+            { interactionTypes[interactionType]  === 2 && // Leap Motion
+                <LeapMotionApp leftOffset={leftOffset} topOffset={topOffset} showCenterDot={devOptions} clickLength={clickLength} touchPlane={touchPlane}>
+                    { children }
+                </LeapMotionApp>
+            }
+            { interactionTypes[interactionType]  === 3 && // Leap Motion Pinch
+                <LeapMotionAppPinch leftOffset={leftOffset} topOffset={topOffset} showCenterDot={devOptions} grabOrPinch={pinchOrGrab} strengthBeforeClickReset={strengthBeforeClickReset} strengthToClick={strengthToClick}>
+                    { children }
+                </LeapMotionAppPinch>
+            }
+        </CustomKeysContextProvider>
     </UidContextProvider>
 );
 
