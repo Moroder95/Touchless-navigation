@@ -1,12 +1,17 @@
-export { default as TouchlessApp } from './Components/TouchlessWrapper';
+export { default as TouchlessApp } from './Components/TouchlessApp';
 export { default as Touchless } from './Components/Touchless';
 export { default as MobileQR } from './Components/MobileQR';
 
 import { useContext } from 'react';
 import * as socketConnection from './Functions/socketConnection';
 import { UidContext } from './Context/UidContext';
-import { CustomKeysType } from './Context/UidContext';
+import { CustomKeysContext, CustomKeysType } from './Context/CustomKeysContext';
 export { CustomKeysType };
+export type InteractionType =
+| 'phoneHighlight'
+| 'phoneCursor'
+| 'leapMotion'
+| 'leapMotionPinch';
 
 export function useConnectionChange() {
     const { connection } = useContext(UidContext);
@@ -43,7 +48,7 @@ const isEqual = (obj1: object, obj2: object) => {
     return true;
 };
 export function useCustomKeys(customKeysObject: CustomKeysType) {
-    const { setCustomKeys, customKeys } = useContext(UidContext);
+    const { setCustomKeys, customKeys } = useContext(CustomKeysContext);
 
     return {
         initiate() {
@@ -55,7 +60,9 @@ export function useCustomKeys(customKeysObject: CustomKeysType) {
             }
         },
         clear() {
-            setCustomKeys({});
+            if(Object.entries(customKeys).length > 0){
+                setCustomKeys({});
+            }   
         }
     };
 }

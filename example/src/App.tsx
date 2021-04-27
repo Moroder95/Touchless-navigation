@@ -8,11 +8,22 @@ import {
     useCustomKeys,
     useNewSession,
     usePhoneUI,
-    useRedirectPhone
+    useRedirectPhone,
+    TouchlessApp
 } from 'touchless-navigation';
 import MyCheckbox from './MyCheckbox';
 import TestBox from './TestBox';
-
+export type InteractionType =
+    | 'phoneHighlight'
+    | 'phoneCursor'
+    | 'leapMotion'
+    | 'leapMotionPinch';
+export const interactionTypes: readonly InteractionType[] = Object.freeze([
+    'phoneHighlight',
+    'phoneCursor',
+    'leapMotion',
+    'leapMotionPinch',
+]);
 const test = [1, 2, 3, 4, 5, 6, 7, 8];
 const test4 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const test2 = [1, 2];
@@ -38,10 +49,19 @@ const App = () => {
         swipeRight: 'd',
         click: 'space'
     });
+    const [interactionTypeIndex, setInteractionTypeIndex] = React.useState(0);
+    const nextInteractionType = () => {
+        const maxIndex = interactionTypes.length - 1;
+        const i =
+            interactionTypeIndex >= maxIndex ? 0 : interactionTypeIndex + 1;
+        setInteractionTypeIndex(i);
+    };
+    const interactionType = interactionTypes[interactionTypeIndex];
 
     const newSession = useNewSession();
+    
     return (
-        <>
+        <TouchlessApp interactionType={interactionType}>
             {!connectionStatus && (
                 <div style={{ margin: '20px' }}>
                     <MobileQR logLink={true} />
@@ -55,6 +75,7 @@ const App = () => {
             <button onClick={() => redirectPhone('https://google.com')}>
                 Redirect phone
             </button>
+            <button onClick={nextInteractionType}>Next interaction type</button>
             {test.map((el, index) => {
                 return <TestBox el={el} key={index}></TestBox>;
             })}
@@ -106,7 +127,9 @@ const App = () => {
                     </Touchless>
                 );
             })}
-        </>
+            
+        </TouchlessApp>
+        
     );
 };
 
