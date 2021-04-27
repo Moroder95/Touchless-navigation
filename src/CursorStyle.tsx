@@ -13,7 +13,9 @@ export const CursorStyle: (CSSProperties) = {
     borderRadius: "100%",
     borderWidth: "5px",
     opacity: "0.8",
-    borderStyle: "solid"
+    borderStyle: "solid",
+    top: "50vh",
+    left: "50vw"
     
 };
 
