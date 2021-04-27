@@ -66,7 +66,6 @@ export function useNewSession() {
 
 export function useRedirectPhone() {
     return (href: string) => {
-        console.log('redirect', href);
         socketConnection.emit('redirect phone', href);
     };
 }
