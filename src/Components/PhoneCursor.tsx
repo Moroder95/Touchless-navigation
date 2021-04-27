@@ -23,7 +23,6 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
     let socket = socketConnection.connectToSocket();
     useEffect(() => {
         setFreeCursor(true);
-        // let socket: Socket | null = null;
 
         const windowSize = {
             width: window.innerWidth,
@@ -32,16 +31,8 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
         const cursor = document.getElementsByClassName(
             `cursor ${styles.cursor}`
         )[0] as HTMLDivElement;
-        cursor.style.left = '0px';
-        cursor.style.top = '0px';
 
         if (socket) {
-            //   socket = io(host, {
-            //     auth: {
-            //       token: uid,
-            //     }
-            //   });
-
             socket.emit('initialize room');
 
             socket.on(
