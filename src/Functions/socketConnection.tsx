@@ -7,20 +7,21 @@ export let socket: Socket | null = null;
 
 export function connectToSocket() {
     const { uid } = React.useContext(UidContext);
-    
+    const socketRef  = React.useRef<Socket | null>(null);
     React.useEffect(() => {
         return () => {
-            console.log('disconnect connect sokcet')
-            socket?.disconnect()
+            console.log('disconnect connect socket');
+            socket?.disconnect();
         }
     }, [uid]);
-
+  
     if (uid) {
         socket = io(host, {
             auth: {
                 token: uid
             }
         });
+        socketRef.current = socket;
     }
     return socket;
 }

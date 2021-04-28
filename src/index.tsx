@@ -103,8 +103,20 @@ export function useNewSession() {
 }
 
 export function useRedirectPhone() {
+    const { uid } = useContext(UidContext);
+
     return (href: string) => {
-        socketConnection.emit('redirect phone', href);
+        const socket: Socket | null = uid ? io(host, {
+            auth: {
+                token: uid
+            }
+        }) : null;
+        socket?.on('connect', ()=>{
+            console.log('connected before href', socket?.connected)
+            socket?.emit('redirect phone', href);
+            
+        });
+        
     };
 }
 
