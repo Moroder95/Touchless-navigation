@@ -3,7 +3,9 @@ import styles from '../styles.module.css';
 import { UidContext } from '../Context/UidContext';
 // import { CustomKeysContext } from '../Context/CustomKeysContext';
 import { useEffect } from 'react';
-import * as socketConnection from '../Functions/socketConnection';
+// import * as socketConnection from '../Functions/socketConnection';
+import { io, Socket } from 'socket.io-client';
+import { host } from '../Settings/host';
 
 export interface PhoneHighlightProps {
     children: React.ReactNode;
@@ -55,7 +57,7 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
         UidContext
     );
     // const { customKeys } = React.useContext(CustomKeysContext);
-    let socket = socketConnection.connectToSocket();
+    
     
     React.useEffect(() => {
         // runs if next state is update in context, to reset the controlled element
@@ -89,12 +91,12 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
     useEffect(()=>{
         setFreeCursor(false);
         return()=>{
-            socket?.disconnect();
+            // socket?.disconnect();
         }
     },[]);
     useEffect(()=>{
         return()=>{
-            socket?.disconnect();
+            // socket?.disconnect();
         }
     },[uid]);
 
@@ -243,33 +245,24 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
     
     
     useEffect(() => {
-
+        let socket: Socket | null = null;
+        if (uid) {
+            socket = io(host, {
+                auth: {
+                    token: uid
+                }
+            });
+        }
         if (socket) {
-
+            console.log(socket, 'about to init room')
             socket.emit('initialize room');
             socket.on('key event', ({ key }: { key: string }) => {
-                // dispatch key events for
-                // if (Object.keys(customKeys).length > 0) {
-                //     const customGestureValue = customKeyGesture(key);
-                //     const customKey = customKeys.hasOwnProperty(
-                //         customGestureValue
-                //     )
-                //         ? customKeys[customGestureValue]
-                //         : key;
-                //     document.dispatchEvent(
-                //         new KeyboardEvent('keydown', {
-                //             key: customKey,
-                //             bubbles: true
-                //         })
-                //     );
-                // } else {
-                    document.dispatchEvent(
-                        new KeyboardEvent('keydown', {
-                            key: key,
-                            bubbles: true
-                        })
-                    );
-                // }
+                document.dispatchEvent(
+                    new KeyboardEvent('keydown', {
+                        key: key,
+                        bubbles: true
+                    })
+                );
             });
             socket.on('room size changed', ({ users }: any) => {
                 if (users === 2) {
@@ -282,9 +275,9 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
                 socket?.emit('host disconnected');
             });
         }
-        // return ()=>{
-        //     socket?.disconnect();
-        // }
+        return ()=>{
+            socket?.disconnect();
+        }
     }, [uid]);
 
     return (

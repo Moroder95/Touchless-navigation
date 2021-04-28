@@ -5,7 +5,10 @@ import { UidContext } from '../Context/UidContext';
 import styles from '../styles.module.css';
 import { cursorClick } from '../Functions/freeCursorClick';
 import { CursorStyle } from '../CursorStyle';
-import * as socketConnection from '../Functions/socketConnection';
+// import * as socketConnection from '../Functions/socketConnection';
+
+import { io, Socket} from 'socket.io-client';
+import { host } from '../Settings/host';
 
 export interface PhoneCursorProps {
     children: React.ReactNode;
@@ -21,13 +24,13 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
     const BASE = 20;
     const CURSOR_CENTER_OFFSET = 50;
 
-    let socket = socketConnection.connectToSocket();
+    // let socket = socketConnection.connectToSocket();
 
-    useEffect(()=>{
-        return()=>{
-            socket?.disconnect();
-        }
-    },[])
+    // useEffect(()=>{
+    //     return()=>{
+    //         socket?.disconnect();
+    //     }
+    // },[])
 
     useEffect(() => {
         setFreeCursor(true);
@@ -40,6 +43,15 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
             `cursor ${styles.cursor}`
         )[0] as HTMLDivElement;
 
+        let socket: Socket | null = null;
+        if (uid) {
+            socket = io(host, {
+                auth: {
+                    token: uid
+                }
+            });
+        }
+        
         if (socket) {
             socket.emit('initialize room');
 
@@ -92,6 +104,9 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
             socket.on('disconnecting', () => {
                 socket?.emit('host disconnected');
             });
+        }
+        return ()=>{
+            socket?.disconnect();
         }
     }, [uid]);
 
