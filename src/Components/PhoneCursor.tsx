@@ -19,9 +19,8 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
 
     // Setting constants used when calculating cursor movement
     const EXPONENT = 2;
-    const MULTIPLIER_X = 0.1;
-    const MULTIPLIER_Y = 0.07;
-    const BASE = 20;
+    const MULTIPLIER_X = 0.13;
+    const MULTIPLIER_Y = 0.1;
     const CURSOR_CENTER_OFFSET = 50;
 
     // let socket = socketConnection.connectToSocket();
@@ -66,10 +65,10 @@ const PhoneCursor: React.FC<PhoneCursorProps> = ({ children }) => {
                     // Fast movements yield higher values for increased movability
                     // Slow movements yield lower values for increased precision
                     const moveX =
-                        Math.ceil(Math.pow(deltaX, EXPONENT) * MULTIPLIER_X) + BASE *
+                        Math.ceil(Math.pow(deltaX, EXPONENT) * MULTIPLIER_X) *
                         signX;
                     const moveY =
-                        Math.ceil(Math.pow(deltaY, EXPONENT) * MULTIPLIER_Y) + BASE *
+                        Math.ceil(Math.pow(deltaY, EXPONENT) * MULTIPLIER_Y) *
                         signY;
 
                     // New cursor position is calculated
