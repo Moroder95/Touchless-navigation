@@ -90,7 +90,12 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
         return()=>{
             socket?.disconnect();
         }
-    },[])
+    },[]);
+    useEffect(()=>{
+        return()=>{
+            socket?.disconnect();
+        }
+    },[uid]);
 
     useEffect(() => {
         setFreeCursor(false);
@@ -237,15 +242,8 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
     
     
     useEffect(() => {
-        // let socket: Socket | null = null;
 
         if (socket) {
-            // if uid is made, establish socket.io connection
-            // socket = io(host, {
-            //     auth: {
-            //         token: uid
-            //     }
-            // });
 
             socket.emit('initialize room');
             socket.on('key event', ({ key }: { key: string }) => {

@@ -7,6 +7,7 @@ export let socket: Socket | null = null;
 
 export function connectToSocket() {
     const { uid } = React.useContext(UidContext);
+
     if (uid) {
         socket = io(host, {
             auth: {

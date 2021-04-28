@@ -8,22 +8,11 @@ import {
     useCustomKeys,
     useNewSession,
     usePhoneUI,
-    useRedirectPhone,
-    TouchlessApp
+    useRedirectPhone
 } from 'touchless-navigation';
 import MyCheckbox from './MyCheckbox';
 import TestBox from './TestBox';
-export type InteractionType =
-    | 'phoneHighlight'
-    | 'phoneCursor'
-    | 'leapMotion'
-    | 'leapMotionPinch';
-export const interactionTypes: readonly InteractionType[] = Object.freeze([
-    'phoneHighlight',
-    'phoneCursor',
-    'leapMotion',
-    'leapMotionPinch',
-]);
+
 const test = [1, 2, 3, 4, 5, 6, 7, 8];
 const test4 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const test2 = [1, 2];
@@ -42,40 +31,37 @@ const App = () => {
     );
     const redirectPhone = useRedirectPhone();
 
-    const activateCustomKeys = useCustomKeys({
+    const {clear, initiate } = useCustomKeys({
         swipeUp: 'w',
         swipeDown: 's',
         swipeLeft: 'a',
         swipeRight: 'd',
         click: 'space'
     });
-    const [interactionTypeIndex, setInteractionTypeIndex] = React.useState(0);
-    const nextInteractionType = () => {
-        const maxIndex = interactionTypes.length - 1;
-        const i =
-            interactionTypeIndex >= maxIndex ? 0 : interactionTypeIndex + 1;
-        setInteractionTypeIndex(i);
-    };
-    const interactionType = interactionTypes[interactionTypeIndex];
-
-    const newSession = useNewSession();
+ 
     
+    const newSession = useNewSession();
+    React.useEffect(() => {
+        const string = connectionStatus ? "" : "NOT ";
+        console.log(string + "CONNECTED");
+        
+    }, [connectionStatus]);
+
     return (
-        <TouchlessApp interactionType={interactionType}>
+       <>
             {!connectionStatus && (
                 <div style={{ margin: '20px' }}>
                     <MobileQR logLink={true} />
                 </div>
             )}
             <button onClick={goToStartElement}> Go home </button>
-            <button onClick={activateCustomKeys.clear}>CLEAR </button>
-            <button onClick={activateCustomKeys.initiate}>Initiate </button>
+            <button onClick={clear}>CLEAR </button>
+            <button onClick={initiate}>Initiate </button>
             <button onClick={newSession}>Start New Session</button>
             <button onClick={setPhoneUI}>Socket emit message</button>
             <button onClick={() => redirectPhone('https://google.com')}>
                 Redirect phone
             </button>
-            <button onClick={nextInteractionType}>Next interaction type</button>
             {test.map((el, index) => {
                 return <TestBox el={el} key={index}></TestBox>;
             })}
@@ -128,7 +114,7 @@ const App = () => {
                 );
             })}
             
-        </TouchlessApp>
+        </>
         
     );
 };

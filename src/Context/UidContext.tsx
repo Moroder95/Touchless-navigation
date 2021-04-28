@@ -21,7 +21,7 @@ const UidContextProvider: React.SFC<UidContextProps> = ({children}) => {
   const [connection, setConnection] = useState<boolean>(false);
   const [freeCursor, setFreeCursor] = useState<boolean>(false);
   const [next, setNext] = useState(0);
- 
+
   const newUid = ()=>{
     setUid(uuid());
   }
