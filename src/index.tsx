@@ -114,7 +114,6 @@ export function useRedirectPhone() {
         socket?.on('connect', ()=>{
             console.log('connected before href', socket?.connected)
             socket?.emit('redirect phone', href);
-            
         });
         
     };
