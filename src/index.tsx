@@ -1,11 +1,13 @@
 export { default as TouchlessApp } from './Components/TouchlessApp';
 export { default as Touchless } from './Components/Touchless';
 export { default as MobileQR } from './Components/MobileQR';
-
 import { useContext } from 'react';
 import * as socketConnection from './Functions/socketConnection';
 import { UidContext } from './Context/UidContext';
-import { CustomKeysContext, CustomKeysType } from './Context/CustomKeysContext';
+import {/* CustomKeysContext,*/ CustomKeysType } from './Context/CustomKeysContext';
+import { io, Socket } from 'socket.io-client';
+import { host } from './Settings/host';
+
 export { CustomKeysType };
 export type InteractionType =
 | 'phoneHighlight'
@@ -48,27 +50,56 @@ const isEqual = (obj1: object, obj2: object) => {
     return true;
 };
 export function useCustomKeys(customKeysObject: CustomKeysType) {
-    const { setCustomKeys, customKeys } = useContext(CustomKeysContext);
+    
+    const { uid } = useContext(UidContext);
 
-    return {
-        initiate() {
-            if (
-                Object.entries(customKeysObject).length > 0 &&
-                !isEqual(customKeys, customKeysObject)
-            ) {
-                setCustomKeys(customKeysObject);
-            }
-        },
-        clear() {
-            if(Object.entries(customKeys).length > 0){
-                setCustomKeys({});
-            }   
+
+    function initiate() {
+        // let socket = socketConnection.connectToSocket();
+        if (
+            Object.entries(customKeysObject).length > 0 
+        ) {
+            const socket: Socket | null = uid ? io(host, {
+                auth: {
+                    token: uid
+                }
+            }) : null;
+            socket?.on('connect', ()=>{
+                console.log('init in connect', socket?.connected)
+                socket?.emit('set custom keys', customKeysObject);
+                // socket.disconnect();
+            });
+            socket?.on('disconnect', ()=>{
+                console.log('init in disconnect', socket?.id)
+            })
         }
-    };
+    }
+    function clear(){
+        // let socket = socketConnection.connectToSocket();
+        const socket: Socket | null = uid ? io(host, {
+            auth: {
+                token: uid
+            }
+        }) : null;
+
+        socket?.on('connect', ()=>{
+            console.log('clear', socket?.connected)
+            socket?.emit('set custom keys', {});
+            // socket.disconnect();
+        })
+        socket?.on('disconnect', ()=>{
+            console.log('clear in disconnect', socket?.id)
+        })
+        
+    }
+    return {initiate, clear};
 }
 export function useNewSession() {
     const { newUid } = useContext(UidContext);
-    return newUid;
+
+    return () => {
+        newUid();
+    }
 }
 
 export function useRedirectPhone() {

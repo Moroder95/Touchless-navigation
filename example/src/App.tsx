@@ -32,10 +32,10 @@ const App = () => {
     const redirectPhone = useRedirectPhone();
 
     const {clear, initiate } = useCustomKeys({
-        swipeUp: 'w',
-        swipeDown: 's',
-        swipeLeft: 'a',
-        swipeRight: 'd',
+        swipeUp: 'i',
+        swipeDown: 'k',
+        swipeLeft: 'j',
+        swipeRight: 'l',
         click: 'space'
     });
  
@@ -46,6 +46,16 @@ const App = () => {
         console.log(string + "CONNECTED");
         
     }, [connectionStatus]);
+    
+    React.useEffect(() => {
+        const handleKeydown = (e: KeyboardEvent)=>{
+            console.log('custom key: ' + e.key)
+        };
+        document.addEventListener('keydown', handleKeydown);
+        return () => {
+            document.removeEventListener('keydown', handleKeydown);
+        }
+    }, [])
 
     return (
        <>

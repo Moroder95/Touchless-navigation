@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from '../styles.module.css';
 import { UidContext } from '../Context/UidContext';
-import { CustomKeysContext } from '../Context/CustomKeysContext';
+// import { CustomKeysContext } from '../Context/CustomKeysContext';
 import { useEffect } from 'react';
 import * as socketConnection from '../Functions/socketConnection';
 
@@ -23,13 +23,13 @@ const addActive = (element: any) => {
     element.classList.add(...ACTIVESTYLE);
 };
 
-const customKeyGesture = (key: string) => {
-    if (key === 'Enter') {
-        return 'click';
-    } else {
-        return 'swipe'.concat(key.substr(5));
-    }
-};
+// const customKeyGesture = (key: string) => {
+//     if (key === 'Enter') {
+//         return 'click';
+//     } else {
+//         return 'swipe'.concat(key.substr(5));
+//     }
+// };
 
 const getCenterPos = (element: HTMLDivElement | null): coordinateObj => {
     // Function that gives X and Y coordinates on an HTMLDivElement  and the getBoundingClientRect object
@@ -54,7 +54,7 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
     const { uid, setConnection, next, setFreeCursor } = React.useContext(
         UidContext
     );
-    const { customKeys } = React.useContext(CustomKeysContext);
+    // const { customKeys } = React.useContext(CustomKeysContext);
     let socket = socketConnection.connectToSocket();
     
     React.useEffect(() => {
@@ -87,6 +87,7 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
     }, [next]);
 
     useEffect(()=>{
+        setFreeCursor(false);
         return()=>{
             socket?.disconnect();
         }
@@ -98,7 +99,7 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
     },[uid]);
 
     useEffect(() => {
-        setFreeCursor(false);
+        
         const keyEvent = (e: KeyboardEvent) => {
             // Get the currently selected Element from the DOM
             const controlledElement: HTMLDivElement | null = document.querySelector(
@@ -248,27 +249,27 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
             socket.emit('initialize room');
             socket.on('key event', ({ key }: { key: string }) => {
                 // dispatch key events for
-                if (Object.keys(customKeys).length > 0) {
-                    const customGestureValue = customKeyGesture(key);
-                    const customKey = customKeys.hasOwnProperty(
-                        customGestureValue
-                    )
-                        ? customKeys[customGestureValue]
-                        : key;
-                    document.dispatchEvent(
-                        new KeyboardEvent('keydown', {
-                            key: customKey,
-                            bubbles: true
-                        })
-                    );
-                } else {
+                // if (Object.keys(customKeys).length > 0) {
+                //     const customGestureValue = customKeyGesture(key);
+                //     const customKey = customKeys.hasOwnProperty(
+                //         customGestureValue
+                //     )
+                //         ? customKeys[customGestureValue]
+                //         : key;
+                //     document.dispatchEvent(
+                //         new KeyboardEvent('keydown', {
+                //             key: customKey,
+                //             bubbles: true
+                //         })
+                //     );
+                // } else {
                     document.dispatchEvent(
                         new KeyboardEvent('keydown', {
                             key: key,
                             bubbles: true
                         })
                     );
-                }
+                // }
             });
             socket.on('room size changed', ({ users }: any) => {
                 if (users === 2) {
@@ -284,7 +285,7 @@ const PhoneHighlight: React.SFC<PhoneHighlightProps> = ({
         // return ()=>{
         //     socket?.disconnect();
         // }
-    }, [uid, customKeys]);
+    }, [uid]);
 
     return (
         <div className={`${styles['touchless-app']} touchless-app`}>

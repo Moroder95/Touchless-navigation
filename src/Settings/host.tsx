@@ -1,5 +1,5 @@
 export const host = 'https://touchless-socket-io-server.herokuapp.com';
-export const thost = 'http://192.168.68.109:3001';
+export const thost = 'http://192.168.68.109:3002';
 
 // frederik http://192.168.68.109:3001
 

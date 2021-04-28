@@ -1,12 +1,19 @@
 import * as React from 'react';
-import { io, Socket } from 'socket.io-client';
 import { UidContext } from '../Context/UidContext';
+import { io, Socket } from 'socket.io-client';
 import { host } from '../Settings/host';
 
 export let socket: Socket | null = null;
 
 export function connectToSocket() {
     const { uid } = React.useContext(UidContext);
+    
+    React.useEffect(() => {
+        return () => {
+            console.log('disconnect connect sokcet')
+            socket?.disconnect()
+        }
+    }, [uid]);
 
     if (uid) {
         socket = io(host, {
@@ -21,3 +28,14 @@ export function connectToSocket() {
 export const emit = (identifier: string, data: string) => {
     socket?.emit(identifier, { data: data });
 };
+
+export function useSocket(){
+    const { uid } = React.useContext(UidContext);
+
+    const socket = uid ? io(host, {
+        auth: {
+            token: uid
+        }
+    }) : null;
+    return socket;
+}
